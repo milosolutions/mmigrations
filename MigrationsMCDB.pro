@@ -16,6 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        connectionproviders/dbconnectionproviderbase.cpp \
+        connectionproviders/dbconnectionprovidersqlite.cpp \
         databasemanager.cpp \
         dbhelpers.cpp \
         dbmigration.cpp \
@@ -29,6 +31,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    connectionproviders/dbconnectionproviderbase.h \
+    connectionproviders/dbconnectionprovidersqlite.h \
     databasemanager.h \
     dbhelpers.h \
     dbmigration.h \

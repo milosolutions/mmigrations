@@ -1,10 +1,6 @@
 #include "dbmigrationmanager.h"
 
 #include <QDebug>
-#include <QSqlDatabase>
-#include <QFile>
-#include <QFileInfo>
-#include <QDir>
 #include <QSqlQuery>
 #include <QSqlError>
 
@@ -12,36 +8,25 @@
 #include "dbmigration.h"
 #include "dbmigrationsdata.h"
 
-db::MigrationManager::MigrationManager(const QString &dbPath, QObject *parent)
-    : QObject(parent), c_dbPath(dbPath), c_dbConnectionName(metaObject()->className())
+template<class ConnectionProvider, typename Valid>
+db::MigrationManager<ConnectionProvider, Valid>::MigrationManager(const QString &connectionName)
+    : c_dbConnectionName(connectionName)
 {}
 
-bool db::MigrationManager::checkAndCreate()
+template<class ConnectionProvider, typename Valid>
+void db::MigrationManager<ConnectionProvider, Valid>::loadVersion()
 {
-    auto exists = dbExist();
-    if (!exists) {
-        if (!QFileInfo(c_dbPath).absoluteDir().mkpath(".")) {
-            qCritical() << "Cannot create a directory for database: " << c_dbPath;
-        }
-    }
-
-    if (!openDb()) {
-        qCritical() << "Cannot open the local database. File corrupted?";
-        return false;
-    }
-
-    if (exists) {
-        m_dbVersion = getVersionNumber();
-    }
-    return true;
+    m_dbVersion = getVersionNumber();
 }
 
-bool db::MigrationManager::needsUpdate()
+template<class ConnectionProvider, typename Valid>
+bool db::MigrationManager<ConnectionProvider, Valid>::needsUpdate()
 {
     return (m_dbVersion != LATEST_DB_VERSION);
 }
 
-bool db::MigrationManager::update()
+template<class ConnectionProvider, typename Valid>
+bool db::MigrationManager<ConnectionProvider, Valid>::update()
 {
     if (!needsUpdate()) {
         qInfo() << "Database up to date.";
@@ -51,21 +36,12 @@ bool db::MigrationManager::update()
     return updateDb();
 }
 
-bool db::MigrationManager::dbExist() const
-{
-    return QFile::exists(c_dbPath);
-}
-
-bool db::MigrationManager::openDb()
-{
-    return db::Helpers::setupDatabaseConnection(c_dbPath, c_dbConnectionName);
-}
-
-QVersionNumber db::MigrationManager::getVersionNumber() const
+template<class ConnectionProvider, typename Valid>
+QVersionNumber db::MigrationManager<ConnectionProvider, Valid>::getVersionNumber() const
 {
     static const QLatin1String VersionQuery = QLatin1String("SELECT `version` from `Migrations` ORDER BY `id` DESC LIMIT 1");
 
-    auto query = QSqlQuery(db::Helpers::databaseConnection(c_dbConnectionName));
+    auto query = QSqlQuery(ConnectionProvider::instance().databaseConnection(c_dbConnectionName));
     query.prepare(VersionQuery);
     db::Helpers::execQuery(query);
     if (!query.first()) {
@@ -76,14 +52,10 @@ QVersionNumber db::MigrationManager::getVersionNumber() const
     return QVersionNumber::fromString(query.value(0).toString());
 }
 
-bool db::MigrationManager::updateDb()
+template<class ConnectionProvider, typename Valid>
+bool db::MigrationManager<ConnectionProvider, Valid>::updateDb()
 {
-    if (!db::Helpers::hasDatabaseConnection(c_dbConnectionName)) {
-        // we need a separate connection, because we're now in a different thread
-        db::Helpers::setupDatabaseConnection(c_dbPath, c_dbConnectionName);
-    }
-
-    auto db = db::Helpers::databaseConnection(c_dbConnectionName);
+    auto db = ConnectionProvider::instance().databaseConnection(c_dbConnectionName);
     auto dbName = db.connectionName();
 
     if (m_dbVersion > LATEST_DB_VERSION) {
@@ -95,8 +67,9 @@ bool db::MigrationManager::updateDb()
     return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(), std::bind(Migration::RunForward, std::placeholders::_1, db), true);
 }
 
+template<class ConnectionProvider, typename Valid>
 template<typename It>
-bool db::MigrationManager::applyMigrations(It begin, It end, std::function<bool(const Migration &)> const &handler, bool forward)
+bool db::MigrationManager<ConnectionProvider, Valid>::applyMigrations(It begin, It end, std::function<bool(const Migration &)> const &handler, bool forward)
 {
     auto start = begin;
     if (!m_dbVersion.isNull()) {
@@ -118,8 +91,9 @@ bool db::MigrationManager::applyMigrations(It begin, It end, std::function<bool(
     return std::all_of(start, finish, handler);
 }
 
+template<class ConnectionProvider, typename Valid>
 template<typename It>
-It db::MigrationManager::findMigrationNumber(It begin, It end, const QVersionNumber &number)
+It db::MigrationManager<ConnectionProvider, Valid>::findMigrationNumber(It begin, It end, const QVersionNumber &number)
 {
     auto item = std::find_if(begin, end, [&number](const Migration &migration) { return (migration.number() == number); });
     if (item == end) {
@@ -128,3 +102,7 @@ It db::MigrationManager::findMigrationNumber(It begin, It end, const QVersionNum
 
     return item;
 }
+
+// teplate declarations
+#include "connectionproviders/dbconnectionprovidersqlite.h"
+template class db::MigrationManager<db::ConnectionProviderSQLite>;

@@ -29,6 +29,8 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
                                                 ")"),
             QLatin1String("INSERT INTO `User`   (`name`, `type`)"
                                                 "VALUES ('Super User', 0)"),
+            QLatin1String("INSERT INTO `User`   (`name`, `type`)"
+                                                "VALUES ('Login', 0)"),
         }),
         std::bind(&Helpers::runQueries, std::placeholders::_1, QList<QLatin1String>{
             QLatin1String("DROP TABLE `User`")

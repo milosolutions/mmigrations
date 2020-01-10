@@ -4,7 +4,10 @@
 #define CompanyName "Milo Solutions"
 #define AppName "MigrationsMCDB"
 
+#include <QSqlQuery>
+
 #include "databasemanager.h"
+#include "dbhelpers.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +22,21 @@ int main(int argc, char *argv[])
     QObject::connect(&dbManager, &DatabaseManager::databaseUpdateError,
                      &app, []{ qInfo() << "Database update error!"; });
     QObject::connect(&dbManager, &DatabaseManager::databaseReady,
-                     &app, []{ qInfo() << "Database ready!"; });
+                     &app, []{
+        qInfo() << "Database ready!";
+
+        // example usage
+        auto dbConnection = DatabaseManager::ConnectionProvider::instance().databaseConnection();
+        auto query = QSqlQuery(dbConnection);
+        query.prepare("SELECT * FROM `User`;");
+        db::Helpers::execQuery(query);
+
+        qDebug() << "USERS:";
+        while (query.next()) {
+            auto userName = query.value(1).toString();
+            qDebug() << userName;
+        }
+    });
 
     dbManager.setupDatabase();
 

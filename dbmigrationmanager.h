@@ -1,26 +1,28 @@
 #ifndef DBMIGRATIONMANAGER_H
 #define DBMIGRATIONMANAGER_H
 
-#include <QObject>
+#include <QSqlDatabase>
 #include <QVersionNumber>
 #include <functional>
+#include <type_traits>
+
+#include "connectionproviders/dbconnectionproviderbase.h"
 
 namespace db {
 class Migration;
 
-class MigrationManager final : public QObject
+template<class ConnectionProvider, typename Valid = std::enable_if_t<std::is_base_of<ConnectionProviderBase, ConnectionProvider>::value>>
+class MigrationManager final
 {
-    Q_OBJECT
 public:
-    MigrationManager(const QString &dbPath, QObject *parent = nullptr);
+    MigrationManager(const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));
 
-    bool checkAndCreate();
+    void loadVersion();
 
     bool needsUpdate();
     bool update();
 
 private:
-    const QString c_dbPath;
     const QString c_dbConnectionName;
 
     QVersionNumber m_dbVersion;

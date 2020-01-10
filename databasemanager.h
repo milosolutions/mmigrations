@@ -3,30 +3,33 @@
 
 #include <QFutureWatcher>
 
+#include "connectionproviders/dbconnectionprovidersqlite.h"
 #include "dbmigrationmanager.h"
 
 class DatabaseManager : public QObject
 {
     Q_OBJECT
 public:
+    using ConnectionProvider = db::ConnectionProviderSQLite;
     explicit DatabaseManager(QObject *parent = nullptr);
 
     void setupDatabase();
-    QString dbPath() const;
 
 signals:
-    void databaseReady(const QString &dbPath);
+    void databaseReady();
 
     void databaseUpdateStarted() const;
     void databaseUpdateError() const;
 
 private:
+    using MigrationManager = db::MigrationManager<ConnectionProvider>;
+
     static const QLatin1String sc_dbName;
     const QString c_dbPath;
 
     bool m_setupDone = false;
 
-    db::MigrationManager m_migrationManager;
+    MigrationManager m_migrationManager;
     QFuture<bool> m_migrationRunner;
     QFutureWatcher<bool> m_migrationProgress;
 
