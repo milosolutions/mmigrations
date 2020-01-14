@@ -59,7 +59,7 @@ QString db::ConnectionProviderBase::extendedConnectionName(
     }
 
     auto currentThreadIdx = QString("0x%1").arg(
-                        static_cast<quintptr>(QThread::currentThread()),
+                        reinterpret_cast<quintptr>(QThread::currentThread()),
                                     QT_POINTER_SIZE * 2, 16, QChar('0'));
     return QString("%1_%2").arg(baseConnectionName, currentThreadIdx);
 }
