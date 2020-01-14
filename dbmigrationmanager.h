@@ -27,9 +27,6 @@ private:
 
     QVersionNumber m_dbVersion;
 
-    bool dbExist() const;
-    bool openDb();
-
     QVersionNumber getVersionNumber() const;
     bool updateDb();
 
