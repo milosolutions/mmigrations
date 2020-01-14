@@ -13,6 +13,10 @@ db::ConnectionProviderSQLite &db::ConnectionProviderSQLite::instance()
 
 void db::ConnectionProviderSQLite::setupConnectionData(const QString &databasePath, const QString &connectionName)
 {
+    if (!databaseExist(databasePath)) {
+        createDatabase(databasePath);
+    }
+
     auto db = createDatabaseConnection(connectionName);
     db.setDatabaseName(databasePath);
 }
