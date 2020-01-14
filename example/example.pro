@@ -10,6 +10,5 @@ SOURCES +=  main.cpp \
             databasemanager.cpp \
             dbmigrationsdata.cpp
 
-HEADERS += databasemanager.h dbmigrationsdata.h
-
+HEADERS += databasemanager.h
 include(../mmigrations.pri)

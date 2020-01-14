@@ -14,4 +14,5 @@ HEADERS += \
         $$PWD/connectionproviders/dbconnectionprovidersqlite.h \
         $$PWD/dbhelpers.h \
         $$PWD/dbmigration.h \
-        $$PWD/dbmigrationmanager.h
+        $$PWD/dbmigrationmanager.h \
+        $$PWD/dbmigrationsdata.h
