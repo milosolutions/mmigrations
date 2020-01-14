@@ -28,6 +28,7 @@ bool db::Helpers::execQuery(const QSqlDatabase &db, const QLatin1String &querySt
 bool db::Helpers::runQueries(const QSqlDatabase &db, const QList<QLatin1String> &queries)
 {
     return std::all_of(queries.constBegin(), queries.constEnd(),
-                       std::bind(qOverload<const QSqlDatabase &, const QLatin1String &>(&execQuery),
-                                 db, std::placeholders::_1));
+                       [&](const QLatin1String& query) {
+                           return execQuery(db, query);
+                        });
 }
