@@ -7,7 +7,7 @@
 #include <QSqlError>
 
 db::ConnectionProviderBase::ConnectionProviderBase(const QString &databaseType)
-    : m_databaseType(databaseType)
+    : mDatabaseType(databaseType)
 {}
 
 db::ConnectionProviderBase::~ConnectionProviderBase()
@@ -38,12 +38,12 @@ QSqlDatabase db::ConnectionProviderBase::databaseConnection(const QString &conne
 
 QSqlDatabase db::ConnectionProviderBase::createDatabaseConnection(const QString &connectionName) const
 {
-    return QSqlDatabase::addDatabase(m_databaseType, baseConnectionName(connectionName));
+    return QSqlDatabase::addDatabase(mDatabaseType, baseConnectionName(connectionName));
 }
 
 QString db::ConnectionProviderBase::baseConnectionName(const QString &connectionName) const
 {
-    return QString("%1_%2").arg(m_databaseType).arg(connectionName);
+    return QString("%1_%2").arg(mDatabaseType).arg(connectionName);
 }
 
 QString db::ConnectionProviderBase::extendedConnectionName(const QString &connectionName) const

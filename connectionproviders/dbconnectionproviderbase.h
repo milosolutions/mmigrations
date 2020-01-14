@@ -16,7 +16,7 @@ public:
     QSqlDatabase databaseConnection(const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection)) const;
 
 protected:
-    QString m_databaseType;
+    QString mDatabaseType;
 
     QSqlDatabase createDatabaseConnection(const QString &connectionName) const;
 

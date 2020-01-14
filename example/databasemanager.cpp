@@ -5,14 +5,14 @@
 
 extern template class db::MigrationManager<db::ConnectionProviderSQLite>;
 
-const QLatin1String DatabaseManager::sc_dbName = QLatin1String("local.db");
+const QLatin1String DatabaseManager::scDbName = QLatin1String("local.db");
 
 DatabaseManager::DatabaseManager(QObject *parent)
-    : QObject(parent), c_dbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + sc_dbName)
+    : QObject(parent), cDbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + scDbName)
 {
-    connect(&m_migrationProgress, &QFutureWatcher<bool>::finished,
+    connect(&mMigrationProgress, &QFutureWatcher<bool>::finished,
             this, [this]() {
-        if (!m_migrationProgress.result()) {
+        if (!mMigrationProgress.result()) {
             emit databaseUpdateError();
         }
 
@@ -22,21 +22,21 @@ DatabaseManager::DatabaseManager(QObject *parent)
 
 void DatabaseManager::setupDatabase()
 {
-    Q_ASSERT_X(!m_setupDone, __PRETTY_FUNCTION__, "Trying to setup database twice");
-    if (!m_setupDone) {
-        db::ConnectionProviderSQLite::instance().setupConnectionData(c_dbPath);
-        qDebug() << "Database path:" << c_dbPath;
+    Q_ASSERT_X(!mSetupDone, __PRETTY_FUNCTION__, "Trying to setup database twice");
+    if (!mSetupDone) {
+        db::ConnectionProviderSQLite::instance().setupConnectionData(cDbPath);
+        qDebug() << "Database path:" << cDbPath;
 
-        m_migrationManager.loadVersion();
-        if (m_migrationManager.needsUpdate()) {
+        mMigrationManager.loadVersion();
+        if (mMigrationManager.needsUpdate()) {
             emit databaseUpdateStarted();
 
-            m_migrationRunner = QtConcurrent::run(std::bind(&MigrationManager::update, &m_migrationManager));
-            m_migrationProgress.setFuture(m_migrationRunner);
+            mMigrationRunner = QtConcurrent::run(std::bind(&MigrationManager::update, &mMigrationManager));
+            mMigrationProgress.setFuture(mMigrationRunner);
         } else {
             emit databaseReady();
         }
 
-        m_setupDone = true;
+        mSetupDone = true;
     }
 }

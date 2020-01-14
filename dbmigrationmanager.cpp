@@ -10,19 +10,19 @@
 
 template<class ConnectionProvider, typename Valid>
 db::MigrationManager<ConnectionProvider, Valid>::MigrationManager(const QString &connectionName)
-    : c_dbConnectionName(connectionName)
+    : cDbConnectionName(connectionName)
 {}
 
 template<class ConnectionProvider, typename Valid>
 void db::MigrationManager<ConnectionProvider, Valid>::loadVersion()
 {
-    m_dbVersion = getVersionNumber();
+    mDbVersion = getVersionNumber();
 }
 
 template<class ConnectionProvider, typename Valid>
 bool db::MigrationManager<ConnectionProvider, Valid>::needsUpdate()
 {
-    return (m_dbVersion != LATEST_DB_VERSION);
+    return (mDbVersion != LATEST_DB_VERSION);
 }
 
 template<class ConnectionProvider, typename Valid>
@@ -41,7 +41,7 @@ QVersionNumber db::MigrationManager<ConnectionProvider, Valid>::getVersionNumber
 {
     static const QLatin1String VersionQuery = QLatin1String("SELECT `version` from `Migrations` ORDER BY `id` DESC LIMIT 1");
 
-    auto query = QSqlQuery(ConnectionProvider::instance().databaseConnection(c_dbConnectionName));
+    auto query = QSqlQuery(ConnectionProvider::instance().databaseConnection(cDbConnectionName));
     query.prepare(VersionQuery);
     db::Helpers::execQuery(query);
     if (!query.first()) {
@@ -55,10 +55,10 @@ QVersionNumber db::MigrationManager<ConnectionProvider, Valid>::getVersionNumber
 template<class ConnectionProvider, typename Valid>
 bool db::MigrationManager<ConnectionProvider, Valid>::updateDb()
 {
-    auto db = ConnectionProvider::instance().databaseConnection(c_dbConnectionName);
+    auto db = ConnectionProvider::instance().databaseConnection(cDbConnectionName);
     auto dbName = db.connectionName();
 
-    if (m_dbVersion > LATEST_DB_VERSION) {
+    if (mDbVersion > LATEST_DB_VERSION) {
         // backward
         return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(), std::bind(Migration::RunBackward, std::placeholders::_1, db), false);
     }
@@ -72,8 +72,8 @@ template<typename It>
 bool db::MigrationManager<ConnectionProvider, Valid>::applyMigrations(It begin, It end, std::function<bool(const Migration &)> const &handler, bool forward)
 {
     auto start = begin;
-    if (!m_dbVersion.isNull()) {
-        start = findMigrationNumber(begin, end, m_dbVersion);
+    if (!mDbVersion.isNull()) {
+        start = findMigrationNumber(begin, end, mDbVersion);
         if (start == end) {
             qCritical() << "Cannot update database - version missing.";
             return false;

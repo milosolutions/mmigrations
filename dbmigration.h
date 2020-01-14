@@ -12,9 +12,9 @@ class QSqlDatabase;
 namespace db {
 class Migration final {
 public:
-    Migration(const QVersionNumber &m_number,
-              const std::function<bool(QSqlDatabase &)> &m_forward,
-              const std::function<bool(QSqlDatabase &)> &m_backward);
+    Migration(const QVersionNumber &mNumber,
+              const std::function<bool(QSqlDatabase &)> &mForward,
+              const std::function<bool(QSqlDatabase &)> &mBackward);
 
     static bool RunForward(const Migration &m, QSqlDatabase &db);
     static bool RunBackward(const Migration &m, QSqlDatabase &db);
@@ -22,9 +22,9 @@ public:
     QVersionNumber number() const;
 
 private:
-    QVersionNumber m_number;
-    std::function<bool(QSqlDatabase &)> m_forward;
-    std::function<bool(QSqlDatabase &)> m_backward;
+    QVersionNumber mNumber;
+    std::function<bool(QSqlDatabase &)> mForward;
+    std::function<bool(QSqlDatabase &)> mBackward;
 
     void runCommon(QSqlDatabase &db) const;
 };

@@ -24,14 +24,14 @@ signals:
 private:
     using MigrationManager = db::MigrationManager<ConnectionProvider>;
 
-    static const QLatin1String sc_dbName;
-    const QString c_dbPath;
+    static const QLatin1String scDbName;
+    const QString cDbPath;
 
-    bool m_setupDone = false;
+    bool mSetupDone = false;
 
-    MigrationManager m_migrationManager;
-    QFuture<bool> m_migrationRunner;
-    QFutureWatcher<bool> m_migrationProgress;
+    MigrationManager mMigrationManager;
+    QFuture<bool> mMigrationRunner;
+    QFutureWatcher<bool> mMigrationProgress;
 
     void onMigrationFinished(bool result);
 };

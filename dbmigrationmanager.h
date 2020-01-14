@@ -23,9 +23,9 @@ public:
     bool update();
 
 private:
-    const QString c_dbConnectionName;
+    const QString cDbConnectionName;
 
-    QVersionNumber m_dbVersion;
+    QVersionNumber mDbVersion;
 
     QVersionNumber getVersionNumber() const;
     bool updateDb();
