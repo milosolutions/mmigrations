@@ -11,11 +11,13 @@
 namespace db {
 class Migration;
 
-template<class ConnectionProvider, typename Valid = std::enable_if_t<std::is_base_of<ConnectionProviderBase, ConnectionProvider>::value>>
+template<class ConnectionProvider, typename Valid = std::enable_if_t<
+            std::is_base_of<ConnectionProviderBase, ConnectionProvider>::value>>
 class MigrationManager final
 {
 public:
-    MigrationManager(const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));
+    MigrationManager(const QString &connectionName = 
+                                QLatin1String(QSqlDatabase::defaultConnection));
 
     void loadVersion();
 
@@ -34,7 +36,8 @@ private:
     It findMigrationNumber(It begin, It end, const QVersionNumber &number);
 
     template<typename It>
-    bool applyMigrations(It begin, It end, std::function<bool(const Migration &)> const &handler, bool forward);
+    bool applyMigrations(It begin, It end, 
+            std::function<bool(const Migration &)> const &handler, bool forward);
 };
 }
 #endif // DBMIGRATIONMANAGER_H

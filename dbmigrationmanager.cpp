@@ -39,7 +39,8 @@ bool db::MigrationManager<ConnectionProvider, Valid>::update()
 template<class ConnectionProvider, typename Valid>
 QVersionNumber db::MigrationManager<ConnectionProvider, Valid>::getVersionNumber() const
 {
-    static const QLatin1String VersionQuery = QLatin1String("SELECT `version` from `Migrations` ORDER BY `id` DESC LIMIT 1");
+    static const QLatin1String VersionQuery = 
+            QLatin1String("SELECT `version` from `Migrations` ORDER BY `id` DESC LIMIT 1");
 
     auto query = QSqlQuery(ConnectionProvider::instance().databaseConnection(cDbConnectionName));
     query.prepare(VersionQuery);
@@ -60,16 +61,20 @@ bool db::MigrationManager<ConnectionProvider, Valid>::updateDb()
 
     if (mDbVersion > LATEST_DB_VERSION) {
         // backward
-        return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(), std::bind(Migration::RunBackward, std::placeholders::_1, db), false);
+        return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(), 
+            std::bind(Migration::RunBackward, std::placeholders::_1, db), false);
     }
 
     // forward
-    return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(), std::bind(Migration::RunForward, std::placeholders::_1, db), true);
+    return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(), 
+            std::bind(Migration::RunForward, std::placeholders::_1, db), true);
 }
 
 template<class ConnectionProvider, typename Valid>
 template<typename It>
-bool db::MigrationManager<ConnectionProvider, Valid>::applyMigrations(It begin, It end, std::function<bool(const Migration &)> const &handler, bool forward)
+bool db::MigrationManager<ConnectionProvider, Valid>::applyMigrations(
+                It begin, It end, 
+                std::function<bool(const Migration &)> const &handler, bool forward)
 {
     auto start = begin;
     if (!mDbVersion.isNull()) {
@@ -93,9 +98,13 @@ bool db::MigrationManager<ConnectionProvider, Valid>::applyMigrations(It begin, 
 
 template<class ConnectionProvider, typename Valid>
 template<typename It>
-It db::MigrationManager<ConnectionProvider, Valid>::findMigrationNumber(It begin, It end, const QVersionNumber &number)
+It db::MigrationManager<ConnectionProvider, Valid>::findMigrationNumber(
+                                It begin, It end, const QVersionNumber &number)
 {
-    auto item = std::find_if(begin, end, [&number](const Migration &migration) { return (migration.number() == number); });
+    auto item = std::find_if(begin, end, 
+            [&number](const Migration &migration) {
+                return (migration.number() == number); 
+            });
     if (item == end) {
         qCritical() << "Version not found in migrations! Version:" << number;
     }

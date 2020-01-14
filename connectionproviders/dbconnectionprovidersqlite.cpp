@@ -11,7 +11,8 @@ db::ConnectionProviderSQLite &db::ConnectionProviderSQLite::instance()
     return cp;
 }
 
-void db::ConnectionProviderSQLite::setupConnectionData(const QString &databasePath, const QString &connectionName)
+void db::ConnectionProviderSQLite::setupConnectionData(
+                    const QString &databasePath, const QString &connectionName)
 {
     if (!databaseExist(databasePath)) {
         createDatabase(databasePath);

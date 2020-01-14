@@ -8,7 +8,8 @@ extern template class db::MigrationManager<db::ConnectionProviderSQLite>;
 const QLatin1String DatabaseManager::scDbName = QLatin1String("local.db");
 
 DatabaseManager::DatabaseManager(QObject *parent)
-    : QObject(parent), cDbPath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + scDbName)
+    : QObject(parent), cDbPath(QStandardPaths::writableLocation(
+                            QStandardPaths::AppDataLocation) + "/" + scDbName)
 {
     connect(&mMigrationProgress, &QFutureWatcher<bool>::finished,
             this, [this]() {
@@ -31,7 +32,8 @@ void DatabaseManager::setupDatabase()
         if (mMigrationManager.needsUpdate()) {
             emit databaseUpdateStarted();
 
-            mMigrationRunner = QtConcurrent::run(std::bind(&MigrationManager::update, &mMigrationManager));
+            mMigrationRunner = QtConcurrent::run(
+                std::bind(&MigrationManager::update, &mMigrationManager));
             mMigrationProgress.setFuture(mMigrationRunner);
         } else {
             emit databaseReady();

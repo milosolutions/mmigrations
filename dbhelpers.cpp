@@ -13,7 +13,8 @@ bool db::Helpers::execQuery(QSqlQuery &query)
 {
     query.exec();
     if (hasError(query)) {
-        qWarning() << "Cannot apply query: (" << query.lastQuery() << " ) error:" << query.lastError().text();
+        qWarning() << "Cannot apply query: (" << query.lastQuery() 
+                   << " ) error:" << query.lastError().text();
         return false;
     }
 
@@ -28,7 +29,8 @@ bool db::Helpers::execQuery(const QSqlDatabase &db, const QLatin1String &querySt
     return !hasError(query);
 }
 
-bool db::Helpers::runQueries(const QSqlDatabase &db, const QVector<QLatin1String> &queries)
+bool db::Helpers::runQueries(const QSqlDatabase &db, 
+                                    const QVector<QLatin1String> &queries)
 {
     return std::all_of(queries.constBegin(), queries.constEnd(),
                        [&](const QLatin1String& query) {

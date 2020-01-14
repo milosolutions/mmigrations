@@ -9,7 +9,8 @@ class ConnectionProviderSQLite : public ConnectionProviderBase
 public:
     static db::ConnectionProviderSQLite &instance();
 
-    void setupConnectionData(const QString &databasePath, const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));
+    void setupConnectionData(const QString &databasePath, 
+                const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));
 
     static bool databaseExist(const QString &databasePath);
     static bool createDatabase(const QString &databasePath);

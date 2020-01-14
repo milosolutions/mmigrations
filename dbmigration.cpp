@@ -7,7 +7,9 @@
 
 #include "dbhelpers.h"
 
-db::Migration::Migration(const QVersionNumber &number, const std::function<bool (QSqlDatabase &)> &forward, const std::function<bool (QSqlDatabase &)> &backward)
+db::Migration::Migration(const QVersionNumber &number, 
+                         const std::function<bool (QSqlDatabase &)> &forward,
+                         const std::function<bool (QSqlDatabase &)> &backward)
     : mNumber(number), mForward(forward), mBackward(backward)
 {}
 
@@ -17,7 +19,8 @@ bool db::Migration::RunForward(const Migration &m, QSqlDatabase &db)
     auto result = m.mForward(db);
 
     if (result) {
-        static const QLatin1String addMigrationEntryQuery = QLatin1String("INSERT INTO Migrations (`timestamp`, `version`) VALUES (:timestamp, :number)");
+        static const QLatin1String addMigrationEntryQuery("INSERT INTO Migrations"
+                           "(`timestamp`, `version`) VALUES (:timestamp, :number)");
         auto query = QSqlQuery(db);
         query.prepare(addMigrationEntryQuery);
         query.bindValue(":timestamp", QDateTime::currentDateTime().toSecsSinceEpoch());
@@ -36,7 +39,8 @@ bool db::Migration::RunBackward(const Migration &m, QSqlDatabase &db)
     auto result = m.mBackward(db);
 
     if (result) {
-        static const QLatin1String removeMigrationEntryQuery = QLatin1String("DELETE FROM `Migrations` WHERE `version` IS :number");
+        static const QLatin1String removeMigrationEntryQuery = 
+            QLatin1String("DELETE FROM `Migrations` WHERE `version` IS :number");
         auto query = QSqlQuery(db);
         query.prepare(removeMigrationEntryQuery);
         query.bindValue(":number", m.mNumber.toString());

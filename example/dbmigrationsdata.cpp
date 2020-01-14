@@ -14,7 +14,9 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
     {
         { 0, 0, 1 },
         std::bind(&Helpers::runQueries, std::placeholders::_1, db::Helpers::Queries {
-            QLatin1String("CREATE TABLE `Migrations` (`id` INTEGER primary key AUTOINCREMENT, `timestamp` INTEGER NOT NULL, `version` TEXT NOT NULL)"),
+            QLatin1String("CREATE TABLE `Migrations` "
+                            "(`id` INTEGER primary key AUTOINCREMENT,"
+                            " `timestamp` INTEGER NOT NULL, `version` TEXT NOT NULL)"),
         }),
         std::bind(&Helpers::runQueries, std::placeholders::_1, db::Helpers::Queries {
             QLatin1String("DROP TABLE `Migrations`"),
