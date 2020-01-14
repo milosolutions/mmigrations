@@ -5,6 +5,8 @@
 #include <functional>
 #include <QVector>
 
+#include "dbhelpers.h"
+
 class QSqlDatabase;
 
 namespace db {
@@ -26,5 +28,25 @@ private:
 
     void runCommon(QSqlDatabase &db) const;
 };
+
+
+class MigrationBuilder
+{
+public:
+    static MigrationBuilder builder();
+    Migration build();
+    MigrationBuilder&& setVersion(const QVersionNumber& version);
+    MigrationBuilder&& setVersion(const QString& version);
+    MigrationBuilder&& addForwardQuery(const QLatin1String& query);
+    MigrationBuilder&& addForwardQuery(const QString& query);
+    MigrationBuilder&& addBackwardQuery(const QLatin1String& query);
+    MigrationBuilder&& addBackwardQuery(const QString& query);
+
+private:
+    Helpers::Queries mForward;
+    Helpers::Queries mBackward;
+    QVersionNumber mVersion;
+};
+
 }
 #endif // DBMIGRATION_H

@@ -58,3 +58,54 @@ void db::Migration::runCommon(QSqlDatabase &db) const
     Q_ASSERT_X(db.isOpen(), __PRETTY_FUNCTION__,
                "Database object should always be opened for migration!");
 }
+
+db::MigrationBuilder db::MigrationBuilder::builder()
+{
+    return db::MigrationBuilder();
+}
+
+db::Migration db::MigrationBuilder::build()
+{
+    // TODO sanity checks
+    auto forward = [f = std::move(mForward)](const QSqlDatabase &db) {
+                        return Helpers::runQueries(db, f);
+                   };
+    auto backward = [b = std::move(mBackward)](const QSqlDatabase &db) {
+                        return Helpers::runQueries(db, b);
+                   };
+    return db::Migration(mVersion, forward, backward);
+}
+
+db::MigrationBuilder&& db::MigrationBuilder::setVersion(const QVersionNumber &version)
+{
+    mVersion = version;
+    return std::move(*this);
+}
+
+db::MigrationBuilder &&db::MigrationBuilder::setVersion(const QString &version)
+{
+    mVersion = QVersionNumber::fromString(version);
+    return std::move(*this);
+}
+
+db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const QLatin1String &query)
+{
+    mForward.push_back(query);
+    return std::move(*this);
+}
+
+db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const QString &query)
+{
+    return addForwardQuery(QLatin1String(query.toLatin1()));
+}
+
+db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const QLatin1String &query)
+{
+    mBackward.push_back(query);
+    return std::move(*this);
+}
+
+db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const QString &query)
+{
+    return addBackwardQuery(QLatin1String(query.toLatin1()));
+}
