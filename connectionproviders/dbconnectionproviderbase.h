@@ -10,7 +10,7 @@ class ConnectionProviderBase
 {
 public:
     ConnectionProviderBase(const QString &databaseType);
-    virtual ~ConnectionProviderBase();
+    virtual ~ConnectionProviderBase() = default;
 
     bool hasDatabaseConnection(const QString &connectionName = 
                         QLatin1String(QSqlDatabase::defaultConnection)) const;

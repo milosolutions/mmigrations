@@ -10,8 +10,6 @@ db::ConnectionProviderBase::ConnectionProviderBase(const QString &databaseType)
     : mDatabaseType(databaseType)
 {}
 
-db::ConnectionProviderBase::~ConnectionProviderBase()
-{}
 
 bool db::ConnectionProviderBase::hasDatabaseConnection(
                                         const QString &connectionName) const
