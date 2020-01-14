@@ -38,9 +38,9 @@ public:
     MigrationBuilder&& setVersion(const QVersionNumber& version);
     MigrationBuilder&& setVersion(const QString& version);
     MigrationBuilder&& addForwardQuery(const QLatin1String& query);
-    MigrationBuilder&& addForwardQuery(const QString& query);
+    MigrationBuilder&& addForwardQuery(const char* query);
     MigrationBuilder&& addBackwardQuery(const QLatin1String& query);
-    MigrationBuilder&& addBackwardQuery(const QString& query);
+    MigrationBuilder&& addBackwardQuery(const char* query);
 
 private:
     Helpers::Queries mForward;

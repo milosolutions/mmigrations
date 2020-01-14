@@ -94,9 +94,9 @@ db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const QLatin1String
     return std::move(*this);
 }
 
-db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const QString &query)
+db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const char* query)
 {
-    return addForwardQuery(QLatin1String(query.toLatin1()));
+    return addForwardQuery(QLatin1String(query));
 }
 
 db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const QLatin1String &query)
@@ -105,7 +105,7 @@ db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const QLatin1Strin
     return std::move(*this);
 }
 
-db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const QString &query)
+db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const char* query)
 {
-    return addBackwardQuery(QLatin1String(query.toLatin1()));
+    return addBackwardQuery(QLatin1String(query));
 }
