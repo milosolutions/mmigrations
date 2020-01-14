@@ -43,7 +43,7 @@ QSqlDatabase db::ConnectionProviderBase::createDatabaseConnection(const QString 
 
 QString db::ConnectionProviderBase::baseConnectionName(const QString &connectionName) const
 {
-    return QString("%1_%2").arg(mDatabaseType).arg(connectionName);
+    return QString("%1_%2").arg(mDatabaseType, connectionName);
 }
 
 QString db::ConnectionProviderBase::extendedConnectionName(const QString &connectionName) const
@@ -55,5 +55,5 @@ QString db::ConnectionProviderBase::extendedConnectionName(const QString &connec
 
     auto currentThreadIdx = QString("0x%1").arg((quintptr)(QThread::currentThread()),
                                                 QT_POINTER_SIZE * 2, 16, QChar('0'));
-    return QString("%1_%2").arg(baseConnectionName).arg(currentThreadIdx);
+    return QString("%1_%2").arg(baseConnectionName, currentThreadIdx);
 }
