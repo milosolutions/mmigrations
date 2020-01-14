@@ -8,6 +8,9 @@
 
 #include "databasemanager.h"
 #include "dbhelpers.h"
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(migrations)
 
 int main(int argc, char *argv[])
 {
@@ -23,7 +26,7 @@ int main(int argc, char *argv[])
                      &app, []{ qInfo() << "Database update error!"; });
     QObject::connect(&dbManager, &DatabaseManager::databaseReady,
                      &app, []{
-        qInfo() << "Database ready!";
+        qCInfo(migrations) << "Database ready!";
 
         // example usage
         auto dbConnection = DatabaseManager::ConnectionProvider::instance().databaseConnection();
@@ -31,10 +34,10 @@ int main(int argc, char *argv[])
         query.prepare("SELECT * FROM `User`;");
         db::Helpers::execQuery(query);
 
-        qDebug() << "USERS:";
+        qCDebug(migrations) << "USERS:";
         while (query.next()) {
             auto userName = query.value(1).toString();
-            qDebug() << userName;
+            qCDebug(migrations) << userName;
         }
     });
 

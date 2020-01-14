@@ -4,6 +4,9 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QDir>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(migrations)
 
 db::ConnectionProviderSQLite &db::ConnectionProviderSQLite::instance()
 {
@@ -30,7 +33,7 @@ bool db::ConnectionProviderSQLite::databaseExist(const QString &databasePath)
 bool db::ConnectionProviderSQLite::createDatabase(const QString &databasePath)
 {
     if (!QFileInfo(databasePath).absoluteDir().mkpath(".")) {
-        qCritical() << "Cannot create a directory for database: " << databasePath;
+        qCCritical(migrations) << "Cannot create a directory for database: " << databasePath;
         return false;
     }
     return true;

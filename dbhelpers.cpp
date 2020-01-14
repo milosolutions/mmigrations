@@ -4,6 +4,10 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(migrations, "MMigrations")
+
 bool db::Helpers::hasError(const QSqlQuery &query)
 {
     return query.lastError().isValid();
@@ -13,7 +17,7 @@ bool db::Helpers::execQuery(QSqlQuery &query)
 {
     query.exec();
     if (hasError(query)) {
-        qWarning() << "Cannot apply query: (" << query.lastQuery() 
+        qCWarning(migrations) << "Cannot apply query: (" << query.lastQuery() 
                    << " ) error:" << query.lastError().text();
         return false;
     }

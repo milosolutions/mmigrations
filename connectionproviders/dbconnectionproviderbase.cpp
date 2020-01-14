@@ -5,6 +5,9 @@
 #include <QThread>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(migrations)
 
 db::ConnectionProviderBase::ConnectionProviderBase(const QString &databaseType)
     : mDatabaseType(databaseType)
@@ -32,7 +35,7 @@ QSqlDatabase db::ConnectionProviderBase::databaseConnection(
     }
 
     if (!db.isOpen() && !db.open()) {
-        qCritical() << "Cannot open database connection. Cannot proceed.";
+        qCCritical(migrations) << "Cannot open database connection. Cannot proceed.";
     }
     return db;
 }

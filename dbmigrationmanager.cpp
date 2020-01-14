@@ -7,6 +7,9 @@
 #include "dbhelpers.h"
 #include "dbmigration.h"
 #include "dbmigrationsdata.h"
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(migrations)
 
 template<class ConnectionProvider, typename Valid>
 db::MigrationManager<ConnectionProvider, Valid>::MigrationManager(const QString &connectionName)
@@ -29,7 +32,7 @@ template<class ConnectionProvider, typename Valid>
 bool db::MigrationManager<ConnectionProvider, Valid>::update()
 {
     if (!needsUpdate()) {
-        qInfo() << "Database up to date.";
+        qCInfo(migrations) << "Database up to date.";
         return true;
     }
 
@@ -46,7 +49,7 @@ QVersionNumber db::MigrationManager<ConnectionProvider, Valid>::getVersionNumber
     query.prepare(VersionQuery);
     db::Helpers::execQuery(query);
     if (!query.first()) {
-        qCritical() << "No version in migration table.";
+        qCCritical(migrations) << "No version in migration table.";
         return {};
     }
 
@@ -80,7 +83,7 @@ bool db::MigrationManager<ConnectionProvider, Valid>::applyMigrations(
     if (!mDbVersion.isNull()) {
         start = findMigrationNumber(begin, end, mDbVersion);
         if (start == end) {
-            qCritical() << "Cannot update database - version missing.";
+            qCCritical(migrations) << "Cannot update database - version missing.";
             return false;
         }
         start += (forward ? 1 : 0);
@@ -88,7 +91,7 @@ bool db::MigrationManager<ConnectionProvider, Valid>::applyMigrations(
 
     auto finish = findMigrationNumber(begin, end, LATEST_DB_VERSION);
     if (finish == end) {
-        qCritical() << "Cannot update database - latest version missing.";
+        qCCritical(migrations) << "Cannot update database - latest version missing.";
         return false;
     }
     finish += (forward ? 1 : 0);
@@ -106,7 +109,7 @@ It db::MigrationManager<ConnectionProvider, Valid>::findMigrationNumber(
                 return (migration.number() == number); 
             });
     if (item == end) {
-        qCritical() << "Version not found in migrations! Version:" << number;
+        qCCritical(migrations) << "Version not found in migrations! Version:" << number;
     }
 
     return item;
