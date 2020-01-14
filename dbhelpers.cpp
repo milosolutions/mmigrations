@@ -9,12 +9,15 @@ bool db::Helpers::hasError(const QSqlQuery &query)
     return query.lastError().isValid();
 }
 
-void db::Helpers::execQuery(QSqlQuery &query)
+bool db::Helpers::execQuery(QSqlQuery &query)
 {
     query.exec();
     if (hasError(query)) {
         qWarning() << "Cannot apply query: (" << query.lastQuery() << " ) error:" << query.lastError().text();
+        return false;
     }
+
+    return true;
 }
 
 bool db::Helpers::execQuery(const QSqlDatabase &db, const QLatin1String &queryStr)
