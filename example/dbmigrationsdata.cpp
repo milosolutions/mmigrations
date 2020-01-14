@@ -36,9 +36,11 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
             QLatin1String("DROP TABLE `User`")
         })
     },
-
+    // --- Next migration example (with builder) ---
     MigrationBuilder::builder()
+        // sets version (could be also QVersionNumber)
         .setVersion("0.0.3")
+        // set of forward queries
         .addForwardQuery("CREATE TABLE `Fun`  ("
                          "`id` INTEGER primary key UNIQUE,"
                          "`name` TEXT NOT NULL,"
@@ -46,6 +48,8 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
                          ")")
         .addForwardQuery("INSERT INTO `Fun`   (`name`, `type`)"
                          "VALUES ('Super Fun', 0)")
+        // one backward query
         .addBackwardQuery("DROP TABLE `Fun`")
+        // creates Migration object
         .build()
 };
