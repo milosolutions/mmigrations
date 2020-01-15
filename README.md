@@ -26,6 +26,18 @@ namespace db {
 }
 ```
 
+First migration should contain MIGRATIONS table with timestamp and a migration 
+number. Luckly there is a static method to create it:
+```c++
+const QVector<db::Migration> db::DB_MIGRATIONS = {
+    // very first migration can be created this way:
+    MigrationBuilder::migration001()
+    // next migrations goes here 
+     , Migration2, Migration3.... , MigrationN
+}
+```
+
+
 Migration is a simple class which contains number and 2 functions performing 
 forward and backward migration. You can initialize it this way if you need full
 control:
@@ -52,11 +64,11 @@ Or you can use this fluent builder if all you need is to set queries:
 ```c++
 MigrationBuilder::builder()
     .setVersion("0.0.3")
-    .addForwardQuery("CREATE TABLE `Fun`  ("
-                        "`id` INTEGER primary key UNIQUE,"
-                        "`name` TEXT NOT NULL,"
-                        "`type` INTEGER NOT NULL"
-                        ")")
+    .addForwardQuery(" CREATE TABLE `Fun`  (                "
+                     "    `id` INTEGER primary key UNIQUE,  "
+                     "    `name` TEXT NOT NULL,             "
+                     "    `type` INTEGER NOT NULL           "
+                     " )")
     .addBackwardQuery("DROP TABLE `Fun`")
     .build()
 ```
