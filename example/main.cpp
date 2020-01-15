@@ -10,6 +10,8 @@
 #include "dbhelpers.h"
 #include <QLoggingCategory>
 
+#include <connectionproviders/dbconnectionprovidersqlite.h>
+
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
 int main(int argc, char *argv[])

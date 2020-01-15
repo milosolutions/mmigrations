@@ -3,15 +3,13 @@
 
 #include <QFutureWatcher>
 
-#include "connectionproviders/dbconnectionprovidersqlite.h"
-//#include "dbmigrationmanager.h"
+namespace db {
 
-
-class MMigrationsBase : public QObject
+class AbstractMigrationManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit MMigrationsBase(QObject* parent = nullptr);
+    explicit AbstractMigrationManager(QObject* parent = nullptr);
 
     virtual void setupDatabase() = 0;
 
@@ -33,4 +31,5 @@ protected:
     void onMigrationFinished(bool result);
 };
 
+}
 #endif // DATABASEMANAGER_H

@@ -7,7 +7,7 @@ namespace db {
 class ConnectionProviderSQLite : public ConnectionProviderBase
 {
 public:
-    static db::ConnectionProviderSQLite &instance();
+    //static db::ConnectionProviderSQLite &instance();
 
     void setupConnectionData(const QString &databasePath, 
                 const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));

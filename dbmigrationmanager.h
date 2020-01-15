@@ -8,14 +8,14 @@
 
 #include "connectionproviders/dbconnectionproviderbase.h"
 
-#include "mmigrations.h"
+#include "dbabstractmigrationmanager.h"
 
 namespace db {
 class Migration;
 
 template<class ConnectionProvider, typename Valid = std::enable_if_t<
             std::is_base_of<ConnectionProviderBase, ConnectionProvider>::value>>
-class MigrationManager : public ConnectionProvider , public MMigrationsBase
+class MigrationManager : public ConnectionProvider , public AbstractMigrationManager
 {
 public:
     MigrationManager(const QString &connectionName = 
