@@ -6,7 +6,7 @@
 
 #include <QSqlQuery>
 
-#include "databasemanager.h"
+#include "dbmigrationmanager.h"
 #include "dbhelpers.h"
 #include <QLoggingCategory>
 
@@ -19,17 +19,18 @@ int main(int argc, char *argv[])
     app.setOrganizationName(CompanyName);
     app.setApplicationName(AppName);
 
-    DatabaseManager dbManager;
-    QObject::connect(&dbManager, &DatabaseManager::databaseUpdateStarted,
+    using SqliteMigrations = db::MigrationManager<db::ConnectionProviderSQLite>;
+    SqliteMigrations dbManager;
+    QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateStarted,
                      &app, []{ qInfo() << "Database update started!"; });
-    QObject::connect(&dbManager, &DatabaseManager::databaseUpdateError,
+    QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateError,
                      &app, []{ qInfo() << "Database update error!"; });
-    QObject::connect(&dbManager, &DatabaseManager::databaseReady,
-                     &app, []{
+    QObject::connect(&dbManager, &SqliteMigrations ::databaseReady,
+                     &app, [&]{
         qCInfo(migrations) << "Database ready!";
 
         // example usage
-        auto dbConnection = DatabaseManager::ConnectionProvider::instance().databaseConnection();
+        auto dbConnection = dbManager.databaseConnection();
         auto query = QSqlQuery(dbConnection);
         query.prepare("SELECT * FROM `User`;");
         db::Helpers::execQuery(query);

@@ -8,12 +8,14 @@
 
 #include "connectionproviders/dbconnectionproviderbase.h"
 
+#include "mmigrations.h"
+
 namespace db {
 class Migration;
 
 template<class ConnectionProvider, typename Valid = std::enable_if_t<
             std::is_base_of<ConnectionProviderBase, ConnectionProvider>::value>>
-class MigrationManager final
+class MigrationManager : public ConnectionProvider , public MMigrationsBase
 {
 public:
     MigrationManager(const QString &connectionName = 
@@ -24,7 +26,9 @@ public:
     bool needsUpdate();
     bool update();
 
-private:
+    void setupDatabase() override;
+
+protected:
     const QString cDbConnectionName;
 
     QVersionNumber mDbVersion;

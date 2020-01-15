@@ -4,16 +4,16 @@
 #include <QFutureWatcher>
 
 #include "connectionproviders/dbconnectionprovidersqlite.h"
-#include "dbmigrationmanager.h"
+//#include "dbmigrationmanager.h"
 
-class DatabaseManager : public QObject
+
+class MMigrationsBase : public QObject
 {
     Q_OBJECT
 public:
-    using ConnectionProvider = db::ConnectionProviderSQLite;
-    explicit DatabaseManager(QObject *parent = nullptr);
+    explicit MMigrationsBase(QObject* parent = nullptr);
 
-    void setupDatabase();
+    virtual void setupDatabase() = 0;
 
 signals:
     void databaseReady();
@@ -21,15 +21,12 @@ signals:
     void databaseUpdateStarted() const;
     void databaseUpdateError() const;
 
-private:
-    using MigrationManager = db::MigrationManager<ConnectionProvider>;
-
+protected:
     static const QLatin1String scDbName;
     const QString cDbPath;
 
     bool mSetupDone = false;
 
-    MigrationManager mMigrationManager;
     QFuture<bool> mMigrationRunner;
     QFutureWatcher<bool> mMigrationProgress;
 

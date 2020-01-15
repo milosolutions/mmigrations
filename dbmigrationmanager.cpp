@@ -8,6 +8,7 @@
 #include "dbmigration.h"
 #include "dbmigrationsdata.h"
 #include <QLoggingCategory>
+#include <QtConcurrent/QtConcurrent>
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
@@ -40,12 +41,35 @@ bool db::MigrationManager<ConnectionProvider, Valid>::update()
 }
 
 template<class ConnectionProvider, typename Valid>
+void db::MigrationManager<ConnectionProvider, Valid>::setupDatabase()
+{
+    Q_ASSERT_X(!mSetupDone, Q_FUNC_INFO, "Trying to setup database twice");
+    if (!mSetupDone) {
+        db::ConnectionProviderSQLite::setupConnectionData(cDbPath);
+        qCDebug(migrations) << "Database path:" << cDbPath;
+
+        loadVersion();
+        if (needsUpdate()) {
+            emit databaseUpdateStarted();
+
+            mMigrationRunner = QtConcurrent::run(
+                std::bind(&MigrationManager::update, this));
+            mMigrationProgress.setFuture(mMigrationRunner);
+        } else {
+            emit databaseReady();
+        }
+
+        mSetupDone = true;
+    }
+}
+
+template<class ConnectionProvider, typename Valid>
 QVersionNumber db::MigrationManager<ConnectionProvider, Valid>::getVersionNumber() const
 {
     static const QLatin1String VersionQuery = 
             QLatin1String("SELECT `version` from `Migrations` ORDER BY `id` DESC LIMIT 1");
 
-    auto query = QSqlQuery(ConnectionProvider::instance().databaseConnection(cDbConnectionName));
+    auto query = QSqlQuery(ConnectionProvider::databaseConnection(cDbConnectionName));
     query.prepare(VersionQuery);
     db::Helpers::execQuery(query);
     if (!query.first()) {
@@ -59,7 +83,7 @@ QVersionNumber db::MigrationManager<ConnectionProvider, Valid>::getVersionNumber
 template<class ConnectionProvider, typename Valid>
 bool db::MigrationManager<ConnectionProvider, Valid>::updateDb()
 {
-    auto db = ConnectionProvider::instance().databaseConnection(cDbConnectionName);
+    auto db = ConnectionProvider::databaseConnection(cDbConnectionName);
     auto dbName = db.connectionName();
 
     if (mDbVersion > LATEST_DB_VERSION) {
