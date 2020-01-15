@@ -70,7 +70,13 @@ db::MigrationBuilder db::MigrationBuilder::builder()
 
 db::Migration db::MigrationBuilder::build()
 {
-    // TODO sanity checks
+    Q_ASSERT_X(!mVersion.isNull(), Q_FUNC_INFO,
+               "Version was not set!");
+    Q_ASSERT_X(!mForward.empty(), Q_FUNC_INFO,
+               "Forward queries collection is empty!");
+    Q_ASSERT_X(!mBackward.empty(), Q_FUNC_INFO,
+               "Backward queries collection is empty!");
+
     auto forward = [f = std::move(mForward)](const QSqlDatabase &db) {
                         return Helpers::runQueries(db, f);
                    };
