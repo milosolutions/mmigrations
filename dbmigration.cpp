@@ -76,6 +76,22 @@ void db::Migration::runCommon(QSqlDatabase &db) const
  */
 
 /**
+ * This static method returns very first migration
+ * which creates Migrations table with version and a timestamp
+ */
+db::Migration db::MigrationBuilder::migration001()
+{
+    return MigrationBuilder::builder()
+            .setVersion("0.0.1")
+            .addForwardQuery(
+                "CREATE TABLE `Migrations` "
+                "(`id` INTEGER primary key AUTOINCREMENT,"
+                " `timestamp` INTEGER NOT NULL, `version` TEXT NOT NULL)")
+            .addBackwardQuery("DROP TABLE `Migrations`")
+            .build();
+}
+
+/**
  *  Creates a builder object to start building
  */
 db::MigrationBuilder db::MigrationBuilder::builder()

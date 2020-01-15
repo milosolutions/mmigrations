@@ -33,6 +33,7 @@ private:
 class MigrationBuilder
 {
 public:
+    static Migration migration001();
     static MigrationBuilder builder();
     Migration build();
     MigrationBuilder&& setVersion(const QVersionNumber& version);
