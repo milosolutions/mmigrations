@@ -7,7 +7,7 @@ SOURCES += \
         $$PWD/connectionproviders/dbconnectionprovidersqlite.cpp \
         $$PWD/dbhelpers.cpp \
         $$PWD/dbmigration.cpp \
-        $$PWD/mmigrations.cpp \
+        $$PWD/dbabstractmigrationmanager.cpp \
         $$PWD/dbmigrationmanager.cpp
 
 HEADERS += \
@@ -16,5 +16,5 @@ HEADERS += \
         $$PWD/dbhelpers.h \
         $$PWD/dbmigration.h \
         $$PWD/dbmigrationmanager.h \
-        $$PWD/mmigrations.h
+        $$PWD/dbabstractmigrationmanager.h
         $$PWD/dbmigrationsdata.h
