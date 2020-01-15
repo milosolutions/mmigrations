@@ -28,7 +28,7 @@ QSqlDatabase db::ConnectionProviderBase::databaseConnection(
         db = QSqlDatabase::database(extendedConnectionName(connectionName));
     } else {
         Q_ASSERT_X(QSqlDatabase::contains(baseConnectionName(connectionName)),
-                   __PRETTY_FUNCTION__, "Database used before setup!");
+                   Q_FUNC_INFO, "Database used before setup!");
 
         db = QSqlDatabase::cloneDatabase(baseConnectionName(connectionName), 
                                     extendedConnectionName(connectionName));

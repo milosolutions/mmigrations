@@ -28,7 +28,7 @@ DatabaseManager::DatabaseManager(QObject *parent)
 
 void DatabaseManager::setupDatabase()
 {
-    Q_ASSERT_X(!mSetupDone, __PRETTY_FUNCTION__, "Trying to setup database twice");
+    Q_ASSERT_X(!mSetupDone, Q_FUNC_INFO, "Trying to setup database twice");
     if (!mSetupDone) {
         db::ConnectionProviderSQLite::instance().setupConnectionData(cDbPath);
         qCDebug(migrations) << "Database path:" << cDbPath;

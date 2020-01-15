@@ -59,7 +59,7 @@ QVersionNumber db::Migration::number() const
 
 void db::Migration::runCommon(QSqlDatabase &db) const
 {
-    Q_ASSERT_X(db.isOpen(), __PRETTY_FUNCTION__,
+    Q_ASSERT_X(db.isOpen(), Q_FUNC_INFO,
                "Database object should always be opened for migration!");
 }
 
