@@ -43,15 +43,29 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
         // sets version (could be also QVersionNumber)
         .setVersion("0.0.3")
         // set of forward queries
-        .addForwardQuery("CREATE TABLE `Fun`  ("
-                         "`id` INTEGER primary key UNIQUE,"
-                         "`name` TEXT NOT NULL,"
-                         "`type` INTEGER NOT NULL"
-                         ")")
-        .addForwardQuery("INSERT INTO `Fun`   (`name`, `type`)"
-                         "VALUES ('Super Fun', 0)")
+        .addForwardQuery(" CREATE TABLE `Fun`  (                 "
+                         "     `id` INTEGER primary key UNIQUE,  "
+                         "     `name` TEXT NOT NULL,             "
+                         "     `type` INTEGER NOT NULL           "
+                         " )                                     ")
+        .addForwardQuery(" INSERT INTO `Fun`   (`name`, `type`)  "
+                         "        VALUES ('Super Fun', 0)        ")
         // one backward query
         .addBackwardQuery("DROP TABLE `Fun`")
         // creates Migration object
-        .build()
+        .build(),
+        // --- Another example (with setForward/BackwardQueries) ---
+        MigrationBuilder::builder()
+            .setVersion(QVersionNumber(0, 0, 4))
+            .setForwardQueries( {
+               QLatin1String(" CREATE TABLE `Fun`  (                "
+                             "     `id` INTEGER primary key UNIQUE, "
+                             "     `name` TEXT NOT NULL,            "
+                             "     `type` INTEGER NOT NULL          "
+                             " )"),
+                QLatin1String("INSERT INTO `Fun`   (`name`, `type`)"
+                             "VALUES ('Super Fun', 0)") } )
+            .setBackwardQueries( {
+                QLatin1String("DROP TABLE `Fun`") })
+            .build()
 };
