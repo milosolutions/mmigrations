@@ -7,8 +7,6 @@ TARGET = exampleMigration
 TEMPLATE = app
 
 SOURCES +=  main.cpp \
-            databasemanager.cpp \
             dbmigrationsdata.cpp
 
-HEADERS += databasemanager.h
 include(../mmigrations.pri)
