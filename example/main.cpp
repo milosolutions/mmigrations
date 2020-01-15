@@ -5,6 +5,7 @@
 #define AppName "MigrationsMCDB"
 
 #include <QSqlQuery>
+#include <QStandardPaths>
 
 #include "dbmigrationmanager.h"
 #include "dbhelpers.h"
@@ -23,6 +24,8 @@ int main(int argc, char *argv[])
 
     using SqliteMigrations = db::MigrationManager<db::ConnectionProviderSQLite>;
     SqliteMigrations dbManager;
+    dbManager.setupConnectionData(QStandardPaths::writableLocation(
+                              QStandardPaths::AppDataLocation) + "/local.db");
     QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateStarted,
                      &app, []{ qInfo() << "Database update started!"; });
     QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateError,

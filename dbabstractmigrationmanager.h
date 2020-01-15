@@ -20,9 +20,6 @@ signals:
     void databaseUpdateError() const;
 
 protected:
-    static const QLatin1String scDbName;
-    const QString cDbPath;
-
     bool mSetupDone = false;
 
     QFuture<bool> mMigrationRunner;

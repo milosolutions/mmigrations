@@ -10,11 +10,8 @@ Q_DECLARE_LOGGING_CATEGORY(migrations)
 
 namespace db {
 
-const QLatin1String AbstractMigrationManager::scDbName = QLatin1String("local.db");
-
 AbstractMigrationManager::AbstractMigrationManager(QObject *parent)
-    : QObject(parent), cDbPath(QStandardPaths::writableLocation(
-                            QStandardPaths::AppDataLocation) + "/" + scDbName)
+    : QObject(parent)
 {
     connect(&mMigrationProgress, &QFutureWatcher<bool>::finished,
             this, [this]() {

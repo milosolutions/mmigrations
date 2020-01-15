@@ -45,9 +45,6 @@ void db::MigrationManager<ConnectionProvider, Valid>::setupDatabase()
 {
     Q_ASSERT_X(!mSetupDone, Q_FUNC_INFO, "Trying to setup database twice");
     if (!mSetupDone) {
-        ConnectionProvider::setupConnectionData(cDbPath);
-        qCDebug(migrations) << "Database path:" << cDbPath;
-
         loadVersion();
         if (needsUpdate()) {
             emit databaseUpdateStarted();
