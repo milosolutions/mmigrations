@@ -113,3 +113,17 @@ db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const char* query)
 {
     return addBackwardQuery(QLatin1String(query));
 }
+
+db::MigrationBuilder &&db::MigrationBuilder::setForwardQueries(const db::Helpers::Queries &queries)
+{
+    Q_ASSERT_X(mForward.empty(), Q_FUNC_INFO, "mForward collection is not empty!");
+    mForward = queries;
+    return std::move(*this);
+}
+
+db::MigrationBuilder &&db::MigrationBuilder::setBackwardQueries(const db::Helpers::Queries &queries)
+{
+    Q_ASSERT_X(mBackward.empty(), Q_FUNC_INFO, "mForward collection is not empty!");
+    mBackward = queries;
+    return std::move(*this);
+}

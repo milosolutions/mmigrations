@@ -41,6 +41,8 @@ public:
     MigrationBuilder&& addForwardQuery(const char* query);
     MigrationBuilder&& addBackwardQuery(const QLatin1String& query);
     MigrationBuilder&& addBackwardQuery(const char* query);
+    MigrationBuilder&& setForwardQueries(const Helpers::Queries& queries);
+    MigrationBuilder&& setBackwardQueries(const Helpers::Queries& queries);
 
 private:
     Helpers::Queries mForward;
