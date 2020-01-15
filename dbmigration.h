@@ -46,6 +46,7 @@ public:
     MigrationBuilder&& setBackwardQueries(const Helpers::Queries& queries);
 
 private:
+    MigrationBuilder() = default;
     Helpers::Queries mForward;
     Helpers::Queries mBackward;
     QVersionNumber mVersion;

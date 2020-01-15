@@ -15,7 +15,6 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
     // which creates Migrations table with version and a timestamp
     MigrationBuilder::migration001()
     ,
-
     // Here is an example of 'raw' migration. It is simply a version number
     // and a two functions (one for forward, second for backward migrations)
     // functions takes db as a argument
@@ -58,14 +57,14 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
     MigrationBuilder::builder()
         .setVersion(QVersionNumber(0, 0, 4))
         .setForwardQueries( {
-           QLatin1String(" CREATE TABLE `Fun`  (                "
+           QLatin1String(" CREATE TABLE `MoreFun`  (            "
                          "     `id` INTEGER primary key UNIQUE, "
                          "     `name` TEXT NOT NULL,            "
                          "     `type` INTEGER NOT NULL          "
                          " )"),
-            QLatin1String("INSERT INTO `Fun`   (`name`, `type`)"
+            QLatin1String("INSERT INTO `MoreFun`   (`name`, `type`)"
                          "VALUES ('Super Fun', 0)") } )
         .setBackwardQueries( {
-            QLatin1String("DROP TABLE `Fun`") })
+            QLatin1String("DROP TABLE `MoreFun`") })
         .build()
 };
