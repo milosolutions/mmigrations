@@ -11,7 +11,7 @@ MMigraions is a library that helps to manage database migrations.
 
 For example usage, see example project. You can also check doxygen docs.
 
-### Setting up
+# Setting up migrations
 
 To set up migrations you have to create two global variables containing:
 * version
@@ -73,6 +73,34 @@ MigrationBuilder::builder()
     .build()
 ```
 
+# Migrations manager
+To use migration manager you need to write your db connection provider or use 
+available ones (currently only sqlite, it can be found in connectionproviders 
+folder). Next step is to create Migration manager, connect to its signals
+and invoke setupDatabase, like in this example:
+
+```c++
+// SQlite migrations manager 
+using SqliteMigrations = db::MigrationManager<db::ConnectionProviderSQLite>;
+SqliteMigrations dbManager;
+// setting up SQLite db path (method comes from ConnectionProvederSQLite)
+dbManager.setupConnectionData(QStandardPaths::writableLocation(
+                            QStandardPaths::AppDataLocation) + "/local.db");
+
+// connecting to migration manager signals
+QObject::connect(&dbManager, &SqliteMigrations::databaseUpdateStarted,
+                    &app, []{ qInfo() << "Database update started!"; });
+QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateError,
+                    &app, []{ qInfo() << "Database update error!"; });
+QObject::connect(&dbManager, &SqliteMigrations::databaseReady,
+                    &app, []{qCInfo(migrations) << "Database ready!"; });
+
+// setting up database, performing migrations if needed
+dbManager.setupDatabase();
+```
+
+
+
 # License
 
-This project is licensed under the MIT License - see the LICENSE-MiloCodeDB.txt file for details
+This project is licensed under the MIT License - see the LICENSE-MiloCodeDB.txt file for details.

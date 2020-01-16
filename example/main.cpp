@@ -22,8 +22,10 @@ int main(int argc, char *argv[])
     app.setOrganizationName(CompanyName);
     app.setApplicationName(AppName);
 
+    // SQlite migrations manager 
     using SqliteMigrations = db::MigrationManager<db::ConnectionProviderSQLite>;
     SqliteMigrations dbManager;
+    // setting up SQLite db path (method comes from ConnectionProvederSQLite)
     dbManager.setupConnectionData(QStandardPaths::writableLocation(
                               QStandardPaths::AppDataLocation) + "/local.db");
     QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateStarted,
