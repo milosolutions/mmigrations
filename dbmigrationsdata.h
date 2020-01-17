@@ -4,7 +4,7 @@
 #include <QVersionNumber>
 #include <QVector>
 
-namespace db {
+namespace mdatabase {
 
 class Migration;
 

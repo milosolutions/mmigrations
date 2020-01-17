@@ -7,10 +7,10 @@
 #include "dbmigration.h"
 
 //!!! Always remember to update current version for any db changes!
-const QVersionNumber db::LATEST_DB_VERSION = { 0, 0, 4 };
+const QVersionNumber mdatabase::LATEST_DB_VERSION = { 0, 0, 4 };
 
 //!!! Add migrations here
-const QVector<db::Migration> db::DB_MIGRATIONS = {
+const QVector<mdatabase::Migration> mdatabase::DB_MIGRATIONS = {
     // this static method returns very first migration
     // which creates Migrations table with version and a timestamp
     MigrationBuilder::migration001()
@@ -20,7 +20,7 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
     // functions takes db as a argument
     {
         { 0, 0, 2 },
-        std::bind(&Helpers::runQueries, std::placeholders::_1, db::Helpers::Queries {
+        std::bind(&Helpers::runQueries, std::placeholders::_1, mdatabase::Helpers::Queries {
             QLatin1String("CREATE TABLE `User`  (`id`   INTEGER primary key UNIQUE,"
                                                 "`name`		TEXT NOT NULL,"
                                                 "`type`	INTEGER NOT NULL"
@@ -30,7 +30,7 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
             QLatin1String("INSERT INTO `User`   (`name`, `type`)"
                                                 "VALUES ('Login', 0)"),
         }),
-        std::bind(&Helpers::runQueries, std::placeholders::_1, db::Helpers::Queries {
+        std::bind(&Helpers::runQueries, std::placeholders::_1, mdatabase::Helpers::Queries {
             QLatin1String("DROP TABLE `User`")
         })
     },

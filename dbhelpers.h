@@ -6,7 +6,7 @@
 class QSqlDatabase;
 class QSqlQuery;
 
-namespace db {
+namespace mdatabase {
 class Helpers
 {
 public:
@@ -14,9 +14,9 @@ public:
     static bool hasError(const QSqlQuery &query);
 
     static bool execQuery(QSqlQuery &query);
-    static bool execQuery(const QSqlDatabase &db, const QLatin1String &queryStr);
+    static bool execQuery(const QSqlDatabase &mdatabase, const QLatin1String &queryStr);
 
-    static bool runQueries(const QSqlDatabase &db, const Queries &queries);
+    static bool runQueries(const QSqlDatabase &mdatabase, const Queries &queries);
 };
 
 }

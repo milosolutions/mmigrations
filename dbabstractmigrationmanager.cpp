@@ -6,9 +6,7 @@
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
-//extern template class db::MigrationManager<db::ConnectionProviderSQLite>;
-
-namespace db {
+namespace mdatabase {
 
 AbstractMigrationManager::AbstractMigrationManager(QObject *parent)
     : QObject(parent)

@@ -9,18 +9,18 @@
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
-db::ConnectionProviderBase::ConnectionProviderBase(const QString &databaseType)
+mdatabase::ConnectionProviderBase::ConnectionProviderBase(const QString &databaseType)
     : mDatabaseType(databaseType)
 {}
 
 
-bool db::ConnectionProviderBase::hasDatabaseConnection(
+bool mdatabase::ConnectionProviderBase::hasDatabaseConnection(
                                         const QString &connectionName) const
 {
     return QSqlDatabase::contains(extendedConnectionName(connectionName));
 }
 
-QSqlDatabase db::ConnectionProviderBase::databaseConnection(
+QSqlDatabase mdatabase::ConnectionProviderBase::databaseConnection(
                                         const QString &connectionName) const
 {
     auto db = QSqlDatabase{};
@@ -40,20 +40,20 @@ QSqlDatabase db::ConnectionProviderBase::databaseConnection(
     return db;
 }
 
-QSqlDatabase db::ConnectionProviderBase::createDatabaseConnection(
+QSqlDatabase mdatabase::ConnectionProviderBase::createDatabaseConnection(
                                         const QString &connectionName) const
 {
     return QSqlDatabase::addDatabase(mDatabaseType, 
                         baseConnectionName(connectionName));
 }
 
-QString db::ConnectionProviderBase::baseConnectionName(
+QString mdatabase::ConnectionProviderBase::baseConnectionName(
                             const QString &connectionName) const
 {
     return QString("%1_%2").arg(mDatabaseType, connectionName);
 }
 
-QString db::ConnectionProviderBase::extendedConnectionName(
+QString mdatabase::ConnectionProviderBase::extendedConnectionName(
                                         const QString &connectionName) const
 {
     auto baseConnectionName = this->baseConnectionName(connectionName);

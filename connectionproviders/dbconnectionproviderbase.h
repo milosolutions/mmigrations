@@ -5,7 +5,7 @@
 #include <QString>
 #include <QHash>
 
-namespace db {
+namespace mdatabase {
 class ConnectionProviderBase
 {
 public:

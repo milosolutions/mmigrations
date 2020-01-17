@@ -3,11 +3,11 @@
 
 #include "dbconnectionproviderbase.h"
 
-namespace db {
+namespace mdatabase {
 class ConnectionProviderSQLite : public ConnectionProviderBase
 {
 public:
-    static db::ConnectionProviderSQLite &instance();
+    static mdatabase::ConnectionProviderSQLite &instance();
 
     void setupConnectionData(const QString &databasePath, 
                 const QString &connectionName = QLatin1String(QSqlDatabase::defaultConnection));

@@ -3,7 +3,7 @@
 
 #include <QFutureWatcher>
 
-namespace db {
+namespace mdatabase {
 
 class AbstractMigrationManager : public QObject
 {

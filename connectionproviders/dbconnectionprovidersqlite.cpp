@@ -8,13 +8,13 @@
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
-db::ConnectionProviderSQLite &db::ConnectionProviderSQLite::instance()
+mdatabase::ConnectionProviderSQLite &mdatabase::ConnectionProviderSQLite::instance()
 {
     static ConnectionProviderSQLite cp;
     return cp;
 }
 
-void db::ConnectionProviderSQLite::setupConnectionData(
+void mdatabase::ConnectionProviderSQLite::setupConnectionData(
                     const QString &databasePath, const QString &connectionName)
 {
     if (!databaseExist(databasePath)) {
@@ -25,12 +25,12 @@ void db::ConnectionProviderSQLite::setupConnectionData(
     db.setDatabaseName(databasePath);
 }
 
-bool db::ConnectionProviderSQLite::databaseExist(const QString &databasePath)
+bool mdatabase::ConnectionProviderSQLite::databaseExist(const QString &databasePath)
 {
     return QFile::exists(databasePath);
 }
 
-bool db::ConnectionProviderSQLite::createDatabase(const QString &databasePath)
+bool mdatabase::ConnectionProviderSQLite::createDatabase(const QString &databasePath)
 {
     if (!QFileInfo(databasePath).absoluteDir().mkpath(".")) {
         qCCritical(migrations) << "Cannot create a directory for database: " << databasePath;
@@ -39,6 +39,6 @@ bool db::ConnectionProviderSQLite::createDatabase(const QString &databasePath)
     return true;
 }
 
-db::ConnectionProviderSQLite::ConnectionProviderSQLite()
+mdatabase::ConnectionProviderSQLite::ConnectionProviderSQLite()
     : ConnectionProviderBase("QSQLITE")
 {}

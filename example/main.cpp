@@ -24,12 +24,12 @@ int main(int argc, char *argv[])
 
 
     // setting up SQLite db path
-    db::ConnectionProviderSQLite::instance().setupConnectionData(
+    mdatabase::ConnectionProviderSQLite::instance().setupConnectionData(
                 QStandardPaths::writableLocation(
                     QStandardPaths::AppDataLocation) + "/local.db");
 
     // SQlite migrations manager 
-    using SqliteMigrations = db::MigrationManager<db::ConnectionProviderSQLite>;
+    using SqliteMigrations = mdatabase::MigrationManager<mdatabase::ConnectionProviderSQLite>;
     SqliteMigrations dbManager;
     QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateStarted,
                      &app, []{ qInfo() << "Database update started!"; });
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         auto dbConnection = dbManager.provider().databaseConnection();
         auto query = QSqlQuery(dbConnection);
         query.prepare("SELECT * FROM `User`;");
-        db::Helpers::execQuery(query);
+        mdatabase::Helpers::execQuery(query);
 
         qCDebug(migrations) << "USERS:";
         while (query.next()) {

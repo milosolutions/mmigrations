@@ -17,7 +17,7 @@ template <typename T>
 struct has_instance_method<T, 
            std::void_t<decltype(T::instance()) >> : std::true_type {};
 
-namespace db {
+namespace mdatabase {
 class Migration;
 
 template<class ConnectionProvider, typename Valid = std::enable_if_t<
@@ -70,7 +70,7 @@ protected:
 #include <QtConcurrent/QtConcurrent>
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
-namespace db {
+namespace mdatabase {
 // Migration manager implementation
 template<class ConnectionProvider, typename Valid>
 MigrationManager<ConnectionProvider, Valid>::MigrationManager(const QString &connectionName)
@@ -128,7 +128,7 @@ QVersionNumber MigrationManager<ConnectionProvider, Valid>::getVersionNumber() c
 
     auto query = QSqlQuery(provider().databaseConnection(cDbConnectionName));
     query.prepare(VersionQuery);
-    db::Helpers::execQuery(query);
+    mdatabase::Helpers::execQuery(query);
     if (!query.first()) {
         qCCritical(migrations) << "No version in migration table.";
         return {};

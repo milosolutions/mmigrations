@@ -11,13 +11,13 @@
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
-db::Migration::Migration(const QVersionNumber &number, 
+mdatabase::Migration::Migration(const QVersionNumber &number, 
                          const std::function<bool (QSqlDatabase &)> &forward,
                          const std::function<bool (QSqlDatabase &)> &backward)
     : mNumber(number), mForward(forward), mBackward(backward)
 {}
 
-bool db::Migration::RunForward(const Migration &m, QSqlDatabase &db)
+bool mdatabase::Migration::RunForward(const Migration &m, QSqlDatabase &db)
 {
     m.runCommon(db);
     auto result = m.mForward(db);
@@ -37,7 +37,7 @@ bool db::Migration::RunForward(const Migration &m, QSqlDatabase &db)
     return result;
 }
 
-bool db::Migration::RunBackward(const Migration &m, QSqlDatabase &db)
+bool mdatabase::Migration::RunBackward(const Migration &m, QSqlDatabase &db)
 {
     m.runCommon(db);
     auto result = m.mBackward(db);
@@ -49,19 +49,19 @@ bool db::Migration::RunBackward(const Migration &m, QSqlDatabase &db)
         query.prepare(removeMigrationEntryQuery);
         query.bindValue(":number", m.mNumber.toString());
 
-        db::Helpers::execQuery(query);
-        result &= !db::Helpers::hasError(query);
+        mdatabase::Helpers::execQuery(query);
+        result &= !mdatabase::Helpers::hasError(query);
     }
 
     return result;
 }
 
-QVersionNumber db::Migration::number() const
+QVersionNumber mdatabase::Migration::number() const
 {
     return mNumber;
 }
 
-void db::Migration::runCommon(QSqlDatabase &db) const
+void mdatabase::Migration::runCommon(QSqlDatabase &db) const
 {
     Q_ASSERT_X(db.isOpen(), Q_FUNC_INFO,
                "Database object should always be opened for migration!");
@@ -79,7 +79,7 @@ void db::Migration::runCommon(QSqlDatabase &db) const
  * This static method returns very first migration
  * which creates Migrations table with version and a timestamp
  */
-db::Migration db::MigrationBuilder::migration001()
+mdatabase::Migration mdatabase::MigrationBuilder::migration001()
 {
     return MigrationBuilder::builder()
             .setVersion("0.0.1")
@@ -94,15 +94,15 @@ db::Migration db::MigrationBuilder::migration001()
 /**
  *  Creates a builder object to start building
  */
-db::MigrationBuilder db::MigrationBuilder::builder()
+mdatabase::MigrationBuilder mdatabase::MigrationBuilder::builder()
 {
-    return db::MigrationBuilder();
+    return mdatabase::MigrationBuilder();
 }
 
 /**
  *  Finalizes building and returns final Migration object
  */
-db::Migration db::MigrationBuilder::build()
+mdatabase::Migration mdatabase::MigrationBuilder::build()
 {
     Q_ASSERT_X(!mVersion.isNull(), Q_FUNC_INFO,
                "Version was not set!");
@@ -111,19 +111,19 @@ db::Migration db::MigrationBuilder::build()
     Q_ASSERT_X(!mBackward.empty(), Q_FUNC_INFO,
                "Backward queries collection is empty!");
 
-    auto forward = [f = std::move(mForward)](const QSqlDatabase &db) {
-                        return Helpers::runQueries(db, f);
+    auto forward = [f = std::move(mForward)](const QSqlDatabase &mdatabase) {
+                        return Helpers::runQueries(mdatabase, f);
                    };
-    auto backward = [b = std::move(mBackward)](const QSqlDatabase &db) {
-                        return Helpers::runQueries(db, b);
+    auto backward = [b = std::move(mBackward)](const QSqlDatabase &mdatabase) {
+                        return Helpers::runQueries(mdatabase, b);
                    };
-    return db::Migration(mVersion, forward, backward);
+    return mdatabase::Migration(mVersion, forward, backward);
 }
 
 /**
  * Sets migration version (major, minor, micro numbers)
  */
-db::MigrationBuilder&& db::MigrationBuilder::setVersion(const QVersionNumber &version)
+mdatabase::MigrationBuilder&& mdatabase::MigrationBuilder::setVersion(const QVersionNumber &version)
 {
     mVersion = version;
     return std::move(*this);
@@ -133,7 +133,7 @@ db::MigrationBuilder&& db::MigrationBuilder::setVersion(const QVersionNumber &ve
  * Sets migration version. Version should have format acceptable by QVersionNumber,
  * like this : "1.1.0" (major, minor, micro numbers)
  */
-db::MigrationBuilder &&db::MigrationBuilder::setVersion(const QString &version)
+mdatabase::MigrationBuilder &&mdatabase::MigrationBuilder::setVersion(const QString &version)
 {
     mVersion = QVersionNumber::fromString(version);
     return std::move(*this);
@@ -143,7 +143,7 @@ db::MigrationBuilder &&db::MigrationBuilder::setVersion(const QString &version)
  * Adds query that is used in forward migration. Every invokation of this method
  * will add new query after last one.
  */
-db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const QLatin1String &query)
+mdatabase::MigrationBuilder &&mdatabase::MigrationBuilder::addForwardQuery(const QLatin1String &query)
 {
     mForward.push_back(query);
     return std::move(*this);
@@ -153,7 +153,7 @@ db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const QLatin1String
  * Adds query that is used in forward migration. Every invokation of this method
  * will add new query after last one.
  */
-db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const char* query)
+mdatabase::MigrationBuilder &&mdatabase::MigrationBuilder::addForwardQuery(const char* query)
 {
     return addForwardQuery(QLatin1String(query));
 }
@@ -162,7 +162,7 @@ db::MigrationBuilder &&db::MigrationBuilder::addForwardQuery(const char* query)
  * Adds query that is used in backward migration. Every invokation of this method
  * will add new query after last one.
  */
-db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const QLatin1String &query)
+mdatabase::MigrationBuilder &&mdatabase::MigrationBuilder::addBackwardQuery(const QLatin1String &query)
 {
     mBackward.push_back(query);
     return std::move(*this);
@@ -172,7 +172,7 @@ db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const QLatin1Strin
  * Adds query that is used in backward migration. Every invokation of this method
  * will add new query after last one.
  */
-db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const char* query)
+mdatabase::MigrationBuilder &&mdatabase::MigrationBuilder::addBackwardQuery(const char* query)
 {
     return addBackwardQuery(QLatin1String(query));
 }
@@ -181,7 +181,7 @@ db::MigrationBuilder &&db::MigrationBuilder::addBackwardQuery(const char* query)
  * Sets all queries that are used in forward migration. It is assumed that no forward queries
  * were added before this method invokation
  */
-db::MigrationBuilder &&db::MigrationBuilder::setForwardQueries(const db::Helpers::Queries &queries)
+mdatabase::MigrationBuilder &&mdatabase::MigrationBuilder::setForwardQueries(const mdatabase::Helpers::Queries &queries)
 {
     Q_ASSERT_X(mForward.empty(), Q_FUNC_INFO, "mForward collection is not empty!");
     mForward = queries;
@@ -192,7 +192,7 @@ db::MigrationBuilder &&db::MigrationBuilder::setForwardQueries(const db::Helpers
  * Sets all queries that are used in backward migration. It is assumed that no backward queries
  * were added before this method invokation
  */
-db::MigrationBuilder &&db::MigrationBuilder::setBackwardQueries(const db::Helpers::Queries &queries)
+mdatabase::MigrationBuilder &&mdatabase::MigrationBuilder::setBackwardQueries(const mdatabase::Helpers::Queries &queries)
 {
     Q_ASSERT_X(mBackward.empty(), Q_FUNC_INFO, "mForward collection is not empty!");
     mBackward = queries;
