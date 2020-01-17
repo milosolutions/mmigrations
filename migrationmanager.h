@@ -6,9 +6,9 @@
 #include <functional>
 #include <type_traits>
 
-#include "connectionproviders/dbconnectionproviderbase.h"
+#include "connectionproviders/connectionproviderbase.h"
 
-#include "dbabstractmigrationmanager.h"
+#include "abstractmigrationmanager.h"
 
 template <typename T, typename = void>
 struct has_instance_method : std::false_type {};
@@ -64,8 +64,8 @@ protected:
 #include <QSqlError>
 
 #include "dbhelpers.h"
-#include "dbmigration.h"
-#include "dbmigrationsdata.h"
+#include "migration.h"
+#include "migrationsdata.h"
 #include <QLoggingCategory>
 #include <QtConcurrent/QtConcurrent>
 

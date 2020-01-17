@@ -1,10 +1,10 @@
-#include "dbmigrationsdata.h"
+#include "migrationsdata.h"
 
 #include <QString>
 #include <QList>
 
 #include "dbhelpers.h"
-#include "dbmigration.h"
+#include "migration.h"
 
 //!!! Always remember to update current version for any db changes!
 const QVersionNumber mdatabase::LATEST_DB_VERSION = { 0, 0, 4 };

@@ -7,11 +7,11 @@
 #include <QSqlQuery>
 #include <QStandardPaths>
 
-#include "dbmigrationmanager.h"
+#include "migrationmanager.h"
 #include "dbhelpers.h"
 #include <QLoggingCategory>
 
-#include <connectionproviders/dbconnectionprovidersqlite.h>
+#include <connectionproviders/connectionprovidersqlite.h>
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
@@ -31,11 +31,11 @@ int main(int argc, char *argv[])
     // SQlite migrations manager 
     using SqliteMigrations = mdatabase::MigrationManager<mdatabase::ConnectionProviderSQLite>;
     SqliteMigrations dbManager;
-    QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateStarted,
+    QObject::connect(&dbManager, &SqliteMigrations::databaseUpdateStarted,
                      &app, []{ qInfo() << "Database update started!"; });
-    QObject::connect(&dbManager, &SqliteMigrations ::databaseUpdateError,
+    QObject::connect(&dbManager, &SqliteMigrations::databaseUpdateError,
                      &app, []{ qInfo() << "Database update error!"; });
-    QObject::connect(&dbManager, &SqliteMigrations ::databaseReady,
+    QObject::connect(&dbManager, &SqliteMigrations::databaseReady,
                      &app, [&]{
         qCInfo(migrations) << "Database ready!";
 
