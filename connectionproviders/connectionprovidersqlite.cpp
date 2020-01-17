@@ -1,4 +1,4 @@
-#include "dbconnectionprovidersqlite.h"
+#include "connectionprovidersqlite.h"
 
 #include <QDebug>
 #include <QFileInfo>

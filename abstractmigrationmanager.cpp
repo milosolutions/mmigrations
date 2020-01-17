@@ -1,4 +1,4 @@
-#include "dbabstractmigrationmanager.h"
+#include "abstractmigrationmanager.h"
 
 #include <QFuture>
 #include <QLoggingCategory>

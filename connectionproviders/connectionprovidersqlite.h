@@ -1,7 +1,7 @@
 #ifndef DBCONNECTIONPROVIDERSQLITE_H
 #define DBCONNECTIONPROVIDERSQLITE_H
 
-#include "dbconnectionproviderbase.h"
+#include "connectionproviderbase.h"
 
 namespace mdatabase {
 class ConnectionProviderSQLite : public ConnectionProviderBase

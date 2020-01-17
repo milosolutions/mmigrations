@@ -1,4 +1,4 @@
-#include "dbmigration.h"
+#include "migration.h"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>

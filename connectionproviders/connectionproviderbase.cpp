@@ -1,4 +1,4 @@
-#include "dbconnectionproviderbase.h"
+#include "connectionproviderbase.h"
 
 #include <QCoreApplication>
 #include <QDebug>
