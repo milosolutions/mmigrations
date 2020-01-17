@@ -10,16 +10,24 @@
 
 #include "dbabstractmigrationmanager.h"
 
+template <typename T, typename = void>
+struct has_instance_method : std::false_type {};
+
+template <typename T>
+struct has_instance_method<T, 
+           std::void_t<decltype(T::instance()) >> : std::true_type {};
+
 namespace db {
 class Migration;
 
 template<class ConnectionProvider, typename Valid = std::enable_if_t<
-            std::is_base_of<ConnectionProviderBase, ConnectionProvider>::value>>
-class MigrationManager : public ConnectionProvider , public AbstractMigrationManager
+            std::is_base_of<ConnectionProviderBase, ConnectionProvider>::value
+            && has_instance_method<ConnectionProvider>::value>>
+class MigrationManager : public AbstractMigrationManager
 {
 public:
     MigrationManager(const QString &connectionName = 
-                                QLatin1String(QSqlDatabase::defaultConnection));
+                              QLatin1String(QSqlDatabase::defaultConnection));
 
     void loadVersion();
 
@@ -27,6 +35,10 @@ public:
     bool update();
 
     void setupDatabase() override;
+
+    const ConnectionProvider& provider() const {
+        return ConnectionProvider::instance();
+    }
 
 protected:
     const QString cDbConnectionName;
@@ -114,7 +126,7 @@ QVersionNumber MigrationManager<ConnectionProvider, Valid>::getVersionNumber() c
     static const QLatin1String VersionQuery = 
             QLatin1String("SELECT `version` from `Migrations` ORDER BY `id` DESC LIMIT 1");
 
-    auto query = QSqlQuery(ConnectionProvider::databaseConnection(cDbConnectionName));
+    auto query = QSqlQuery(provider().databaseConnection(cDbConnectionName));
     query.prepare(VersionQuery);
     db::Helpers::execQuery(query);
     if (!query.first()) {
@@ -128,7 +140,7 @@ QVersionNumber MigrationManager<ConnectionProvider, Valid>::getVersionNumber() c
 template<class ConnectionProvider, typename Valid>
 bool MigrationManager<ConnectionProvider, Valid>::updateDb()
 {
-    auto db = ConnectionProvider::databaseConnection(cDbConnectionName);
+    auto db = provider().databaseConnection(cDbConnectionName);
     auto dbName = db.connectionName();
 
     if (mDbVersion > LATEST_DB_VERSION) {
