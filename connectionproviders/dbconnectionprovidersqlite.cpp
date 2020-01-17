@@ -8,6 +8,12 @@
 
 Q_DECLARE_LOGGING_CATEGORY(migrations)
 
+db::ConnectionProviderSQLite &db::ConnectionProviderSQLite::instance()
+{
+    static ConnectionProviderSQLite cp;
+    return cp;
+}
+
 void db::ConnectionProviderSQLite::setupConnectionData(
                     const QString &databasePath, const QString &connectionName)
 {
