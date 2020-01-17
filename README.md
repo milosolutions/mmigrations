@@ -39,8 +39,21 @@ const QVector<db::Migration> db::DB_MIGRATIONS = {
 
 
 Migration is a simple class which contains number and 2 functions performing 
-forward and backward migration. You can initialize it this way if you need full
-control:
+forward and backward migration. You can initialize it this way using fluent 
+builder if all you need is to set queries:
+```c++
+MigrationBuilder::builder()
+    .setVersion("0.0.3")
+    .addForwardQuery(" CREATE TABLE `Fun`  (                "
+                     "    `id` INTEGER primary key UNIQUE,  "
+                     "    `name` TEXT NOT NULL,             "
+                     "    `type` INTEGER NOT NULL           "
+                     " )")
+    .addBackwardQuery("DROP TABLE `Fun`")
+    .build()
+```
+
+if you need full control you can initialize migration like that:
 ```c++
 {
     { 0, 0, 2 },    // EXAMPLE DATA
@@ -60,18 +73,7 @@ control:
 },
 ```
 
-Or you can use this fluent builder if all you need is to set queries:
-```c++
-MigrationBuilder::builder()
-    .setVersion("0.0.3")
-    .addForwardQuery(" CREATE TABLE `Fun`  (                "
-                     "    `id` INTEGER primary key UNIQUE,  "
-                     "    `name` TEXT NOT NULL,             "
-                     "    `type` INTEGER NOT NULL           "
-                     " )")
-    .addBackwardQuery("DROP TABLE `Fun`")
-    .build()
-```
+
 
 # Migrations manager
 To use migration manager you need to write your db connection provider or use 
