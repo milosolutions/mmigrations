@@ -42,3 +42,7 @@ bool mdatabase::ConnectionProviderSQLite::createDatabase(const QString &database
 mdatabase::ConnectionProviderSQLite::ConnectionProviderSQLite()
     : ConnectionProviderBase("QSQLITE")
 {}
+
+mdatabase::ConnectionProviderSQLite::ConnectionProviderSQLite(const QString &type)
+    : ConnectionProviderBase(type)
+{}

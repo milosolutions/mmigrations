@@ -12,15 +12,15 @@ public:
     ConnectionProviderBase(const QString &databaseType);
     virtual ~ConnectionProviderBase() = default;
 
-    bool hasDatabaseConnection(const QString &connectionName = 
+    virtual bool hasDatabaseConnection(const QString &connectionName =
                         QLatin1String(QSqlDatabase::defaultConnection)) const;
-    QSqlDatabase databaseConnection(const QString &connectionName = 
+    virtual QSqlDatabase databaseConnection(const QString &connectionName =
                         QLatin1String(QSqlDatabase::defaultConnection)) const;
 
 protected:
     QString mDatabaseType;
 
-    QSqlDatabase createDatabaseConnection(const QString &connectionName) const;
+    virtual QSqlDatabase createDatabaseConnection(const QString &connectionName) const;
 
     QString baseConnectionName(const QString &connectionName) const;
     QString extendedConnectionName(const QString &connectionName) const;
