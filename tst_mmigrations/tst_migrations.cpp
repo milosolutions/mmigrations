@@ -23,13 +23,17 @@ SOFTWARE.
 
 #include <QtTest>
 #include <QCoreApplication>
+#include "migrationmanager.h"
 
-#include "dbmigration.h"
-#include "dbmigrationsdata.h"
+#include "connectionproviders/connectionprovidersqlite.h"
+#include "migration.h"
+#include "migrationsdata.h"
 
-namespace db {
+#include <cstdio>
+
+namespace mdatabase {
     const QVersionNumber LATEST_DB_VERSION = { 0, 0, 3 };
-    const QVector<db::Migration> DB_MIGRATIONS;
+    const QVector<mdatabase::Migration> DB_MIGRATIONS;
 }
 
 
@@ -42,21 +46,33 @@ private slots:
     void cleanupTestCase();
 
     void testMigrationBuilder();
+
+private:
+    QString mDbPath;
 };
 
 void TestMMigrations::initTestCase()
 {
     QCoreApplication::setApplicationName("MMigrations Test");
     QCoreApplication::setOrganizationName("Milo");
+
+    mDbPath = QStandardPaths::writableLocation(
+                    QStandardPaths::AppDataLocation) + "/test.db";
+    mdatabase::ConnectionProviderSQLite::instance().setupConnectionData(mDbPath);
+
+    // SQlite migrations manager
+    using SqliteMigrations = mdatabase::MigrationManager<mdatabase::ConnectionProviderSQLite>;
+    SqliteMigrations dbManager;
 }
 
 void TestMMigrations::cleanupTestCase()
 {
+    QFile::remove(mDbPath);
 }
 
 void TestMMigrations::testMigrationBuilder()
 {
-    db::Migration m = db::MigrationBuilder::builder()
+    mdatabase::Migration m = mdatabase::MigrationBuilder::builder()
         .setVersion("0.0.3")
         .build();
 

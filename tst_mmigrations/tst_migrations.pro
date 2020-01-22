@@ -10,7 +10,7 @@ QT       += testlib
 QT       -= gui
 
 TARGET = tst_migrations
-CONFIG   += console
+CONFIG   += console c++17
 CONFIG   -= app_bundle
 
 TEMPLATE = app
