@@ -31,8 +31,13 @@ void printUsers(const QSqlDatabase& connection)
     }
 }
 
+
+
 int main(int argc, char *argv[])
 {
+
+    extern void dbmigrationsinit();
+    dbmigrationsinit();
     QCoreApplication app(argc, argv);
     app.setApplicationVersion(AppVersion);
     app.setOrganizationName(CompanyName);
@@ -46,6 +51,7 @@ int main(int argc, char *argv[])
     mdb::ConnectionProviderSQLite::instance().setupConnectionData(
                 QStandardPaths::writableLocation(
                     QStandardPaths::AppDataLocation) + "/local.db");
+
 
     // SQlite migrations manager 
     using SqliteMigrations = mdb::MigrationManager<mdb::ConnectionProviderSQLite>;

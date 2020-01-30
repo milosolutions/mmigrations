@@ -5,12 +5,15 @@
 
 #include "dbhelpers.h"
 #include "migration.h"
+#include <iostream>
+
+using namespace mdatabase;
 
 //!!! Always remember to update current version for any db changes!
-const QVersionNumber mdatabase::LATEST_DB_VERSION = { 0, 0, 4 };
+const QVersionNumber LATEST_DB_VERSION = { 0, 0, 4 };
 
 //!!! Add migrations here
-const QVector<mdatabase::Migration> mdatabase::DB_MIGRATIONS = {
+const QVector<mdatabase::Migration> DB_MIGRATIONS = {
     // this static method returns very first migration
     // which creates Migrations table with version and a timestamp
     MigrationBuilder::migration001()
@@ -68,3 +71,10 @@ const QVector<mdatabase::Migration> mdatabase::DB_MIGRATIONS = {
             QLatin1String("DROP TABLE `MoreFun`") })
         .build()
 };
+
+
+extern void dbmigrationsinit()
+{
+    MIGRATIONS::init(LATEST_DB_VERSION, DB_MIGRATIONS);
+}
+
