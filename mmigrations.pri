@@ -17,5 +17,5 @@ HEADERS += \
         $$PWD/dbhelpers.h \
         $$PWD/migration.h \
         $$PWD/migrationmanager.h \
-        $$PWD/abstractmigrationmanager.h
+        $$PWD/abstractmigrationmanager.h \
         $$PWD/migrationsdata.h
