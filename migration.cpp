@@ -9,7 +9,12 @@
 
 #include <QLoggingCategory>
 
+
 Q_DECLARE_LOGGING_CATEGORY(migrations)
+
+#include "migrationsdata.h"
+QVector<mdatabase::Migration> mdatabase::MIGRATIONS::sMigrations;
+QVersionNumber mdatabase::MIGRATIONS::sVersion;
 
 mdatabase::Migration::Migration(const QVersionNumber &number, 
                          const std::function<bool (QSqlDatabase &)> &forward,
