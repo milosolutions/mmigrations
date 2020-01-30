@@ -86,7 +86,7 @@ void MigrationManager<ConnectionProvider, Valid>::loadVersion()
 template<class ConnectionProvider, typename Valid>
 bool MigrationManager<ConnectionProvider, Valid>::needsUpdate()
 {
-    return (mDbVersion != LATEST_DB_VERSION);
+    return (mDbVersion != MIGRATIONS::latestDbVersion());
 }
 
 template<class ConnectionProvider, typename Valid>
@@ -143,14 +143,14 @@ bool MigrationManager<ConnectionProvider, Valid>::updateDb()
     auto db = provider().databaseConnection(cDbConnectionName);
     auto dbName = db.connectionName();
 
-    if (mDbVersion > LATEST_DB_VERSION) {
+    if (mDbVersion > MIGRATIONS::latestDbVersion()) {
         // backward
-        return applyMigrations(DB_MIGRATIONS.rbegin(), DB_MIGRATIONS.rend(), 
+        return applyMigrations(MIGRATIONS::migrations().rbegin(), MIGRATIONS::migrations().rend(),
             std::bind(Migration::RunBackward, std::placeholders::_1, db), false);
     }
 
     // forward
-    return applyMigrations(DB_MIGRATIONS.begin(), DB_MIGRATIONS.end(), 
+    return applyMigrations(MIGRATIONS::migrations().begin(), MIGRATIONS::migrations().end(),
             std::bind(Migration::RunForward, std::placeholders::_1, db), true);
 }
 
@@ -170,7 +170,7 @@ bool MigrationManager<ConnectionProvider, Valid>::applyMigrations(
         start += (forward ? 1 : 0);
     }
 
-    auto finish = findMigrationNumber(begin, end, LATEST_DB_VERSION);
+    auto finish = findMigrationNumber(begin, end, MIGRATIONS::latestDbVersion());
     if (finish == end) {
         qCCritical(migrations) << "Cannot update database - latest version missing.";
         return false;
