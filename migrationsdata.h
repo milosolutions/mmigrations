@@ -10,11 +10,15 @@ namespace mdatabase {
     public:
         static const QVersionNumber& latestDbVersion()
         {
+            Q_ASSERT_X(!sVersion.isNull(), Q_FUNC_INFO,
+                       "Migrations were no set properly, check manual");
             return sVersion;
         }
 
         static const QVector<Migration>& migrations()
         {
+            Q_ASSERT_X(!sMigrations.empty(), Q_FUNC_INFO,
+                       "Migrations were no set properly, check manual");
             return sMigrations;
         }
 
