@@ -13,28 +13,32 @@ For example usage, see example project. You can also check doxygen docs.
 
 # Setting up migrations
 
-To set up migrations you have to create two global variables containing:
+To set up migrations you have to create two  variables containing:
 * version
 * migrations list
-Here is an example definition for each one:
+There are helpers macros which makes whole process very simple. Here is an example
+of basic setup:
 ```c++
-namespace db {
-    const QVersionNumber LATEST_DB_VERSION = { 0, 0, 3 };
-    const QVector<db::Migration> DB_MIGRATIONS { 
-        /* Migration1, Migration2 ... */ 
-    };
-}
+#include "migrationsdata.h"
+
+// ...
+
+using namespace mdatabase;
+
+CURRENT_MIGRATION_VERSION(0, 0, 4);
+START_MIGRATIONS
+    MigrationBuilder::migration001(),
+        /* Migration2, Migration3 ... */ 
+END_MIGRATIONS
 ```
 
 First migration should contain MIGRATIONS table with timestamp and a migration 
 number. Luckly there is a static method to create it:
 ```c++
-const QVector<db::Migration> db::DB_MIGRATIONS = {
     // very first migration can be created this way:
     MigrationBuilder::migration001()
     // next migrations goes here 
      , Migration2, Migration3.... , MigrationN
-}
 ```
 
 
@@ -73,6 +77,22 @@ if you need full control you can initialize migration like that:
 },
 ```
 
+
+One step left to initialize migrations - setting up MIGRATIONS class. 
+There is also helper macro for it. Just run it before any other migration operations, like this:
+
+```c++
+int main(int argc, char *argv[])
+{
+    // ...
+    INIT_MIGRATIONS
+    mdb::ConnectionProviderSQLite::instance().setupConnectionData(
+                QStandardPaths::writableLocation(
+                    QStandardPaths::AppDataLocation) + "/local.db");
+
+    using SqliteMigrations = mdb::MigrationManager<mdb::ConnectionProviderSQLite>;
+    SqliteMigrations dbManager;
+```
 
 
 # Migrations manager
