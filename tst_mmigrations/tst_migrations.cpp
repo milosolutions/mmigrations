@@ -74,6 +74,8 @@ void TestMMigrations::testMigrationBuilder()
 {
     mdatabase::Migration m = mdatabase::MigrationBuilder::builder()
         .setVersion("0.0.3")
+        .addForwardQuery("CREATE TABLE `User`  (`id` INTEGER primary key UNIQUE)")
+        .addBackwardQuery("DROP TABLE `User`")
         .build();
 
     
