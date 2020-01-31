@@ -35,9 +35,8 @@ void printUsers(const QSqlDatabase& connection)
 
 int main(int argc, char *argv[])
 {
-
-    extern void dbmigrationsinit();
-    dbmigrationsinit();
+    INIT_MIGRATIONS
+    
     QCoreApplication app(argc, argv);
     app.setApplicationVersion(AppVersion);
     app.setOrganizationName(CompanyName);

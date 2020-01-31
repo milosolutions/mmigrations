@@ -10,10 +10,10 @@
 using namespace mdatabase;
 
 //!!! Always remember to update current version for any db changes!
-const QVersionNumber LATEST_DB_VERSION = { 0, 0, 4 };
 
+CURRENT_MIGRATION_VERSION(0, 0, 4);
 //!!! Add migrations here
-const QVector<mdatabase::Migration> DB_MIGRATIONS = {
+START_MIGRATIONS
     // this static method returns very first migration
     // which creates Migrations table with version and a timestamp
     MigrationBuilder::migration001()
@@ -70,11 +70,5 @@ const QVector<mdatabase::Migration> DB_MIGRATIONS = {
         .setBackwardQueries( {
             QLatin1String("DROP TABLE `MoreFun`") })
         .build()
-};
-
-
-extern void dbmigrationsinit()
-{
-    MIGRATIONS::init(LATEST_DB_VERSION, DB_MIGRATIONS);
-}
+END_MIGRATIONS
 
