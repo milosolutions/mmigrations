@@ -1,3 +1,8 @@
+if (POLICY CMP0048)
+        cmake_policy(SET CMP0048 NEW)
+endif ()
+
+cmake_minimum_required(VERSION 3.5)
 
 project(mmigrations
   VERSION 0.0.1
@@ -5,9 +10,10 @@ project(mmigrations
   LANGUAGES CXX
 )
 
-find_package(Qt5 COMPONENTS REQUIRED Core Sql)
+find_package(Qt5 COMPONENTS Core Sql REQUIRED)
 
-set(SOURCES connectionproviders/connectionproviderbase.h
+set(SOURCES 
+  connectionproviders/connectionproviderbase.h
   connectionproviders/connectionprovidersqlite.h
   connectionproviders/connectionprovidersqlitecipher.h
   dbhelpers.h
@@ -33,10 +39,8 @@ target_include_directories(mmigrations
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
-target_link_libraries(mmigrations
-  Qt5::Core
-  Qt5::Sql
-)
+qt5_use_modules(mmigrations Core Sql)
 
-message("MMigrations: missing unit test!")
-#add_subdirectory(tst_mmigrations)
+enable_testing()
+add_subdirectory(tst_mmigrations)
+add_test(NAME MMigrationsTest COMMAND mmigrations_Test)
