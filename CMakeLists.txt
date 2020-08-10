@@ -1,5 +1,5 @@
 if (POLICY CMP0048)
-        cmake_policy(SET CMP0048 NEW)
+  cmake_policy(SET CMP0048 NEW)
 endif ()
 
 cmake_minimum_required(VERSION 3.5)
@@ -10,9 +10,11 @@ project(mmigrations
   LANGUAGES CXX
 )
 
-find_package(Qt5 COMPONENTS Core Sql REQUIRED)
+find_package(Qt5 COMPONENTS REQUIRED Core Sql)
 
-set(SOURCES 
+set(CMAKE_AUTOMOC ON)
+
+set(SOURCES
   connectionproviders/connectionproviderbase.h
   connectionproviders/connectionprovidersqlite.h
   connectionproviders/connectionprovidersqlitecipher.h
@@ -31,16 +33,17 @@ set(SOURCES
 
 set(OTHER_FILES README.md mmigrations.doxyfile)
 
-add_library(mmigrations OBJECT ${SOURCES} ${OTHER_FILES})
+add_library(mmigrations STATIC ${SOURCES} ${OTHER_FILES})
 
 target_include_directories(mmigrations
   PUBLIC
-  $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
-qt5_use_modules(mmigrations Core Sql)
+target_link_libraries(mmigrations
+  Qt5::Core
+  Qt5::Sql
+)
 
-enable_testing()
 add_subdirectory(tst_mmigrations)
-add_test(NAME MMigrationsTest COMMAND mmigrations_Test)
+add_subdirectory(example)
