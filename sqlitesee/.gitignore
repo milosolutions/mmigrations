@@ -1,0 +1,4 @@
+sqlitesee-sources/
+plugin-build/
+qt-src/
+.qmake.stash

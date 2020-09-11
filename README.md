@@ -1,4 +1,4 @@
-MMigrations
+MDatabase
 ===
 
 [Online documentation](https://docs.milosolutions.com/milo-code-db/mmigrations)
@@ -7,7 +7,9 @@ MMigrations
 
 # Getting started
 
-MMigraions is a library that helps to manage database migrations.
+MDatabase is a library that simplifies and improves database handling in Qt.
+MDatabase contains extra SQL plugins (SQLiteCipher and SQLite SEE) and 
+adds a module for automated handling of database migrations.
 
 For example usage, see example project. You can also check doxygen docs.
 
@@ -121,7 +123,67 @@ QObject::connect(&dbManager, &SqliteMigrations::databaseReady,
 dbManager.setupDatabase();
 ```
 
+# Database drivers
 
+## SQLite
+
+Default SQLite driver, coming from Qt. Use it for local cache and any data which
+does not contain sensitive information.
+
+If you need to store any privacy or security critical information, use either
+QtSQLiteCipher or (better) SQLiteSee.
+
+## QtSQLiteCipher
+
+This is an external (third party) plugin for Qt, which encrypts database data.
+It leaves DB scheme intact, so encrypted file can still be read by standard
+SQLite reader GUIs.
+
+For deployment instructions, see the README inside `sqlitecipher` directory.
+
+## SQLiteSee (SQLite Encryption Extension)
+
+Milo owns a license for [SQLite SEE](https://www.hwaci.com/sw/sqlite/see.html).
+SEE is fully compatible with SQLite, it's developed by the same team, and it
+encrypts all SQLite data. From privacy and security standpoint, this is the best
+option you can take for your project.
+
+MCDB provides a handy installer script for Qt plugin, and a wrapper which makes 
+it very easy to enable SQLiteSee in any project.
+
+**Due to the binary-incompatible nature of Qt's plugins, the plugin** 
+**installation procedure has to be repeated for every Qt version you use.**
+
+### Prerequsites
+
+* amalgamated source code of SQLiteSee has to be put into `sqlitesee/sqlitesee-sources`. It should contain `sqlite3.h` and `sqlite3-see-aes256-ofb.c` files (other will be ignored)
+* either Qt source code or working Internet connection
+* `qmake` in `$PATH`. QSQLiteSee plugin will be installed for this Qt version
+
+### Plugin installation
+
+* `cd` into `sqlitesee`
+* make sure you have right Qt version in `$PATH` by running `qmake -version`
+* run the plugin installer: `./sqlitesee_install.sh`. If you have Qt source code 
+somewhere, you can provide it as first argument. If not, the installer will 
+automatically download it for you
+* inspect the output to make sure all went well
+
+Inside your Qt installation, you should now have `libqsqlitesee.so` plugin.
+
+This process has to be repeated for each Qt installation you are using. Because 
+Qt plugins are not binary compatible, you cannot manually copy the `.so` file 
+to another Qt version. 
+
+### Use SQLiteSee in app
+
+Once the plugin is installed, all that is necessary to use it, is:
+* use "QSQLITESEE" when setting up the database connection: `auto db = QSqlDatabase::addDatabase(                "QSQLITESEE", "someConnectionName");`
+* provide encryption key (password): `QSqlQuery key(QStringLiteral("PRAGMA key='abcdefghjk1234567890qwertyuiopas'"), db);`
+* the password should be 32 bytes long
+* for maximum security, do not provide the password in the source code in clear 
+text. Insttead, use a define and provide it from command line (or environment 
+variable) only during compilation
 
 # License
 

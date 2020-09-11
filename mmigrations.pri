@@ -6,6 +6,7 @@ SOURCES += \
         $$PWD/connectionproviders/connectionproviderbase.cpp \
         $$PWD/connectionproviders/connectionprovidersqlite.cpp \
         $$PWD/connectionproviders/connectionprovidersqlitecipher.cpp \
+        $$PWD/connectionproviders/connectionprovidersqlitesee.cpp \
         $$PWD/dbhelpers.cpp \
         $$PWD/migration.cpp \
         $$PWD/abstractmigrationmanager.cpp
@@ -14,6 +15,7 @@ HEADERS += \
         $$PWD/connectionproviders/connectionproviderbase.h \
         $$PWD/connectionproviders/connectionprovidersqlite.h \
         $$PWD/connectionproviders/connectionprovidersqlitecipher.h \
+        $$PWD/connectionproviders/connectionprovidersqlitesee.h \
         $$PWD/dbhelpers.h \
         $$PWD/migration.h \
         $$PWD/migrationmanager.h \

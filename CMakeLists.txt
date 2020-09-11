@@ -18,6 +18,7 @@ set(SOURCES
   connectionproviders/connectionproviderbase.h
   connectionproviders/connectionprovidersqlite.h
   connectionproviders/connectionprovidersqlitecipher.h
+  connectionproviders/connectionprovidersqlitesee.h
   dbhelpers.h
   migration.h
   migrationmanager.h
@@ -26,6 +27,7 @@ set(SOURCES
   connectionproviders/connectionproviderbase.cpp
   connectionproviders/connectionprovidersqlite.cpp
   connectionproviders/connectionprovidersqlitecipher.cpp
+  connectionproviders/connectionprovidersqlitesee.cpp
   dbhelpers.cpp
   migration.cpp
   abstractmigrationmanager.cpp
