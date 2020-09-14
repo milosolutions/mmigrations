@@ -18,16 +18,29 @@ if [ "${1}" = "-h" ] || [ "${1}" = "--help" ]; then
   exit
 fi
 
-QT_SOURCE="${1}"
+if [ ! -x "$(command -v qmake)" ]; then
+  echo "qmake binary has not been found in PATH!"
+  exit 1
+fi
+
+IS_ANDROID=$(qmake -query QMAKE_XSPEC | grep -c android)
+IS_MSVC=$(qmake -query QMAKE_XSPEC | grep -c msvc)
+
+if [ "$IS_MSVC" = "1" ]; then
+  MSVC_VERSION=${1}
+  QT_SOURCE="${2}"
+
+  if [ -z $MSVC_VERSION ]; then
+    echo "MSVC version not provided. It should be something like 2017 or 2019."
+    exit 2
+  fi
+else
+  QT_SOURCE="${1}"
+fi
 
 if [ -z $QT_SOURCE ]; then
   echo "Qt source directory has not been set! Qt source code will be downloaded "
   echo "based on qmake version in PATH."
-fi
-
-if [ ! -x "$(command -v qmake)" ]; then
-  echo "qmake binary has not been found!"
-  exit 1
 fi
 
 if [ -z $QT_SOURCE ]; then
@@ -96,16 +109,20 @@ cd "${PLUGIN_BUILD}"
 
 echo "Compiling QSQLiteSee plugin in ${PWD}"
 
-qmake sqlitesee.pro
-make -j 4
-
-IS_ANDROID=$(qmake -query QMAKE_XSPEC | grep -c android)
-if [ "$IS_ANDROID" = "1" ]; then
-  # Android, qmake INSTALLS directive fails. Use bash as workaround...
-  QT_PLUGIN_DIR=$(qmake -query QT_INSTALL_PLUGINS)
-  cp libplugins_sqldrivers_qsqlitesee* "${QT_PLUGIN_DIR}/sqldrivers/"
+if [ "$IS_MSVC" = "1" ]; then
+  MSVC_PATH="c:/Program Files (x86)/Microsoft Visual Studio/${MSVC_VERSION}/Community/VC/Auxiliary/Build/vcvarsall.bat"
+  cmd.exe /c "\"${MSVC_PATH}\" x86_amd64 && dir && qmake sqlitesee.pro && nmake && nmake install"
 else
-  make install
+  qmake sqlitesee.pro
+  make -j 4
+
+  if [ "$IS_ANDROID" = "1" ]; then
+    # Android, qmake INSTALLS directive fails. Use bash as workaround...
+    QT_PLUGIN_DIR=$(qmake -query QT_INSTALL_PLUGINS)
+    cp libplugins_sqldrivers_qsqlitesee* "${QT_PLUGIN_DIR}/sqldrivers/"
+  else
+    make install
+  fi
 fi
 
 cd ..

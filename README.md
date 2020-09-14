@@ -168,6 +168,9 @@ it very easy to enable SQLiteSee in any project.
 * run the plugin installer: `./sqlitesee_install.sh`. If you have Qt source code 
 somewhere, you can provide it as first argument. If not, the installer will 
 automatically download it for you
+* on Windows, the first argument has to be MSVC version (2017 or 2019, etc.),
+then the (optional) path to Qt source code. To run the script on Windows, use
+git bash (installed when you install `git` on Windows)
 * inspect the output to make sure all went well
 
 Inside your Qt installation, you should now have `libqsqlitesee.so` plugin.
