@@ -1,12 +1,12 @@
 QT += core sql sql-private
 
-TARGET = qsqlitesee
-
 android {
-    TEMPLATE = app
+  TARGET = plugins_sqldrivers_qsqlitesee
 } else {
-    TEMPLATE = lib
+  TARGET = qsqlitesee
 }
+
+TEMPLATE = lib
 
 CONFIG += c++14 plugin
 DEFINES += "SQLITE_THREADSAFE=1" \

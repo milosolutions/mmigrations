@@ -97,7 +97,17 @@ echo "Compiling QSQLiteSee plugin in ${PWD}"
 
 qmake sqlitesee.pro
 make -j 4
-make install
+
+IS_ANDROID=$(qmake -query QMAKE_XSPEC | grep -c android)
+if [ "$IS_ANDROID" = "1" ]; then
+  # Android, qmake INSTALLS directive fails. Use bash as workaround...
+  QT_PLUGIN_DIR=$(qmake -query QT_INSTALL_PLUGINS)
+  cp libplugins_sqldrivers_qsqlitesee* "${QT_PLUGIN_DIR}/sqldrivers/"
+else
+  make install
+fi
+
+cd ..
 
 echo "Cleanup"
 rm -rf ${PLUGIN_BUILD}
