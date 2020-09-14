@@ -1,7 +1,13 @@
 QT += core sql sql-private
 
 TARGET = qsqlitesee
-TEMPLATE = lib
+
+android {
+    TEMPLATE = app
+} else {
+    TEMPLATE = lib
+}
+
 CONFIG += c++14 plugin
 DEFINES += "SQLITE_THREADSAFE=1" \
    SQLITE_ENABLE_FTS3 SQLITE_ENABLE_FTS3_PARENTHESIS \
