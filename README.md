@@ -164,6 +164,7 @@ it very easy to enable SQLiteSee in any project.
 
 * `cd` into `sqlitesee`
 * make sure you have right Qt version in `$PATH` by running `qmake -version`
+* for Android, also make sure that `ANDROID_NDK_ROOT` is set, for example by using `env | grep ANDROID_NDK_ROOT`
 * run the plugin installer: `./sqlitesee_install.sh`. If you have Qt source code 
 somewhere, you can provide it as first argument. If not, the installer will 
 automatically download it for you

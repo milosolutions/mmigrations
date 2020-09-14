@@ -6,6 +6,7 @@ if [ "${1}" = "-h" ] || [ "${1}" = "--help" ]; then
   echo "Compiles and installs SQLiteSee for given Qt version. Plugin is "
   echo "installed. qmake has to be in path - plugin will be installed into Qt "
   echo "that qmake is coming from."
+  echo "For Android, make sure ANDROID_NDK_ROOT is properly set."
   echo
   echo "Directory 'sqlitesee-source' must contain SQLiteSee source code "
   echo "(amalgamated)."
