@@ -154,9 +154,20 @@ it very easy to enable SQLiteSee in any project.
 **Due to the binary-incompatible nature of Qt's plugins, the plugin** 
 **installation procedure has to be repeated for every Qt version you use.**
 
+### OS support
+
+* Linux
+* Android (from Linux)
+* Windows (MSVC)
+
+The installation script does not work for macOS or iOS targets. The plugin can 
+still be build manually, however - and the DB provider will work normally.
+
 ### Prerequsites
 
-* amalgamated source code of SQLiteSee has to be put into `sqlitesee/sqlitesee-sources`. It should contain `sqlite3.h` and `sqlite3-see-aes256-ofb.c` files (other will be ignored)
+* amalgamated source code of SQLiteSee has to be put into 
+`sqlitesee/sqlitesee-sources`. It should contain `sqlite3.h` and 
+`sqlite3-see-aes256-ofb.c` files (other will be ignored)
 * either Qt source code or working Internet connection
 * `qmake` in `$PATH`. QSQLiteSee plugin will be installed for this Qt version
 
@@ -164,7 +175,8 @@ it very easy to enable SQLiteSee in any project.
 
 * `cd` into `sqlitesee`
 * make sure you have right Qt version in `$PATH` by running `qmake -version`
-* for Android, also make sure that `ANDROID_NDK_ROOT` is set, for example by using `env | grep ANDROID_NDK_ROOT`
+* for Android, also make sure that `ANDROID_NDK_ROOT` is set, for example by 
+using `env | grep ANDROID_NDK_ROOT`
 * run the plugin installer: `./sqlitesee_install.sh`. If you have Qt source code 
 somewhere, you can provide it as first argument. If not, the installer will 
 automatically download it for you
@@ -182,8 +194,10 @@ to another Qt version.
 ### Use SQLiteSee in app
 
 Once the plugin is installed, all that is necessary to use it, is:
-* use "QSQLITESEE" when setting up the database connection: `auto db = QSqlDatabase::addDatabase(                "QSQLITESEE", "someConnectionName");`
-* provide encryption key (password): `QSqlQuery key(QStringLiteral("PRAGMA key='abcdefghjk1234567890qwertyuiopas'"), db);`
+* use "QSQLITESEE" when setting up the database connection: 
+`auto db = QSqlDatabase::addDatabase("QSQLITESEE", "someConnectionName");`
+* provide encryption key (password): 
+`QSqlQuery key(QStringLiteral("PRAGMA key='abcdefghjk1234567890qwertyuiopas'"), db);`
 * the password should be 32 bytes long
 * for maximum security, do not provide the password in the source code in clear 
 text. Insttead, use a define and provide it from command line (or environment 
@@ -191,4 +205,5 @@ variable) only during compilation
 
 # License
 
-This project is licensed under the MIT License - see the LICENSE-MiloCodeDB.txt file for details.
+This project is licensed under the MIT License - see the LICENSE-MiloCodeDB.txt 
+file for details.
