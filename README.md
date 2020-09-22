@@ -1,6 +1,13 @@
 MDatabase
 ===
 
+# DISCONTINUED!
+
+This repository has been abandonned. Please use 
+[MDatabase](https://github.com/milosolutions/mdatabase) repository instead.
+It provides the same functionality (plus a few extras!) but with a new, better 
+name.
+
 [Online documentation](https://docs.milosolutions.com/milo-code-db/mmigrations)
 
 [Source code](https://github.com/milosolutions/mmigrations)
